@@ -270,7 +270,7 @@ function lyte_parse($the_content,$doExcerpt=false) {
 					$duration="T".sanitize_text_field(@$yt_resp_array['entry']['media$group']['yt$duration']['seconds'])."S";
 					$description=esc_attr(sanitize_text_field(@$yt_resp_array['entry']['media$group']['media$description']['$t']));
 					
-					// captions
+					// captions, thanks to Benetech
 					$captionsMeta="";
 					$doCaptions=true;
 
@@ -294,10 +294,11 @@ function lyte_parse($the_content,$doExcerpt=false) {
 							$captionsMeta="";
 							if (array_key_exists('captions_timestamp',$yt_resp_array)) {
 								$cache_timestamp = $yt_resp_array["captions_timestamp"];
+								$interval = (strtotime("now") - $cache_timestamp)/60/60/24;
 							} else {
 								$cache_timestamp = false;
+								$interval = 2;
 							}
-							$interval = (strtotime("now") - $cache_timestamp)/60/60/24;
 						
 							if(!is_int($cache_timestamp) || ($interval > 1 && !is_null($yt_resp_array["captions_data"]))) {
 								$yt_resp_array['captions_timestamp'] = strtotime("now");						
