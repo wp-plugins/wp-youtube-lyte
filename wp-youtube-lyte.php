@@ -71,7 +71,6 @@ $lyteSettings['scheme'] = ( is_ssl() ) ? "https" : "http";
 /** API: filter hook to alter $lyteSettings */
 $lyteSettings = apply_filters( 'lyte_settings', $lyteSettings );
 
-
 /** main function to parse the content, searching and replacing httpv-links */
 function lyte_parse($the_content,$doExcerpt=false) {
 	global $lyteSettings;
@@ -98,9 +97,6 @@ function lyte_parse($the_content,$doExcerpt=false) {
 		preg_match_all($lytes_regexp, $the_content, $matches, PREG_SET_ORDER); 
 
 		foreach($matches as $match) {
-			/* echo "<pre>";
-			print_r($match);
-			echo "</pre>"; */
 			/** API: filter hook to preparse fragment in a httpv-url, e.g. to force hqThumb=1 or showinfo=0 */
 			$match[12] = apply_filters( 'lyte_match_preparse_fragment',$match[12] );
 
@@ -274,8 +270,14 @@ function lyte_parse($the_content,$doExcerpt=false) {
 					$duration="T".sanitize_text_field(@$yt_resp_array['entry']['media$group']['yt$duration']['seconds'])."S";
 					$description=esc_attr(sanitize_text_field(@$yt_resp_array['entry']['media$group']['media$description']['$t']));
 					
-					// if microdata is configured, check if captions are available
-					if(($lyteSettings['microdata'] === "1")&&($noMicroData !== "1" )) {
+					// captions
+					$captionsMeta="";
+					$doCaptions=true;
+
+					/** API: filter hook to disable captions */
+					$doCaptions = apply_filters( 'lyte_docaptions', $doCaptions );
+
+					if(($lyteSettings['microdata'] === "1")&&($noMicroData !== "1" )&&($doCaptions === true)) {
 						if (array_key_exists('captions_data',$yt_resp_array)) {
 							if ($yt_resp_array["captions_data"]) {
 								$captionsMeta="<meta itemprop=\"accessibilityFeature\" content=\"captions\" />";
