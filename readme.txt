@@ -110,7 +110,7 @@ Just tell me, I like the feedback! Use the [Contact-page on my blog](http://blog
 * new: if microdata is enabled, check if captions are available and if so add the accessibilityFeature=captions markup. Gracefully contributed [by Benetech](http://benetech.org/)
 * bugfix: widgets with youtu.be short URL's were broken
 * bugfix: in some cases iframe size on mobile was not correct
-* TODO bugfix: mobile rotation handled more gracefully
+* bugfix: mobile rotation handled more gracefully
 
 = 1.3.3 =
 * fix for playlist shortcode as [reported by pete777](http://wordpress.org/support/topic/playlist-via-shortcode-broken)

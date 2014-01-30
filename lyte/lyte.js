@@ -94,7 +94,7 @@ ly.play = function(id) {
 
     if(typeof tH.firstChild.getAttribute('kabl')=="string") tH.innerHTML="Please check Karma Blocker's config.";
 
-    if (aP==0){window.addEventListener("orientationchange", function() {ly.te();}, false);}
+    if (aP==0){window.addEventListener("orientationchange", function() {d.getElementById(id).width=d.getElementById(id).parentNode.clientWidth;}, false);}
 }
 
 ly.getElementsByClassName = function(className, tag, elm) {
