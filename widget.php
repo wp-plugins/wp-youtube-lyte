@@ -33,6 +33,8 @@ class WYLWidget extends WP_Widget {
 
         if (strpos($WYLurl,'youtu.be')) {
                 $WYLid=substr(parse_url($WYLurl,PHP_URL_PATH),1,11);
+		$PLClass="";
+		$WYLthumb="http://img.youtube.com/vi/".$WYLid."/mqdefault.jpg";
         } else {
 		if (isset($WYLarr['v'])) {
 			$WYLid=$WYLarr['v'];
