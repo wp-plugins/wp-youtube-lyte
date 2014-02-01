@@ -111,9 +111,9 @@ Just tell me, I like the feedback! Use the [Contact-page on my blog](http://blog
 
 = 1.4.0 =
 * new: if microdata is enabled, check if captions are available and if so add the accessibilityFeature=captions markup. Gracefully contributed [by Benetech](http://benetech.org/)
-* bugfix: widgets with youtu.be short URL's were broken
-* bugfix: in some cases iframe size on mobile was not correct
-* bugfix: mobile rotation handled more gracefully
+* bugfix: widgets with youtu.be short URL's were broken (as observed by [Robert of audio-times.com](http://www.audio-times.com/).
+* bugfix: in some cases iframe size on mobile was not correct (reported by [David of webquarry.com](http://www.webquarry.com/).
+* bugfix: mobile rotation handled more efficiently (based on [feedback from Skyfield](http://wordpress.org/support/topic/rotation-bug-on-iphoneipad#post-5102835)
 
 = 1.3.3 =
 * fix for playlist shortcode as [reported by pete777](http://wordpress.org/support/topic/playlist-via-shortcode-broken)
