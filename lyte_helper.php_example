@@ -4,12 +4,12 @@ Plugin Name: Lyte Helper
 Plugin URI: http://blog.futtta.be/category/wp-youtube-lyte/
 Description: Lyte Helper contains some helper functions to make WP YouTube Lyte even more flexible
 Author: Frank Goossens (futtta)
-Version: 0.1
+Version: 0.2
 Author URI: http://blog.futtta.be/
 */
 
 /**
-available filter hooks: lyte_settings, lyte_content_preparse, lyte_match_preparse_fragment, lyte_match_postparse_template, lyte_content_postparse, lyte_css
+available filter hooks: lyte_settings, lyte_content_preparse, lyte_match_preparse_fragment, lyte_match_postparse_template, lyte_content_postparse, lyte_css, lyte_docaptions
 available action hooks; lyte_actionsfilters
 */
 
@@ -74,6 +74,12 @@ function lyte_change_css($lyte_css) {
 function lyte_change_settings($settingsArray) {
 	$settingsArray['links']="0";
 	return $settingsArray;
+}
+
+/** disable captions lookup */
+// add_filter('lyte_docaptions','lyte_nocaptions',10,0);
+function lyte_nocaptions() {
+	return false;
 }
 
 /** force lyte javascript (which includes css) to be loaded in head instead of footer */
