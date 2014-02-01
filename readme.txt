@@ -69,6 +69,9 @@ This was added as a beta feature in version 1.1.0; add ?enablejsapi=1 to the htt
 * The videoobject microdata is NOT added for audio-only embeds, playlists or widgets
 * Google will not always display the thumbnail, this presumably depends of the relevance of the video to the rest of the page.
 
+= How does captions-support get added to the microdata? =
+In January 2014 [Benetech](http://benetech.org/), a U.S. nonprofit that develops and uses technology to create positive social change, offered a patch that adds the [accessibilityFeature property](http://schema.org/accessibilityFeature) to the microdata for videos that have captions. If you have microdata enabled, WP YouTube Lyte will automatically try to check (in a seperate, asynchronous call via a proxy-webservice, as YouTube only offers captions in their API v3 which requires authentication) if captions are available and if so, adds the accessibilityFeature property with value captions to the microdata. This can be disabled by either disabling microdata or, if you want microdata but not the accessibilityFeature-property by using the "lyte_docaptions"-filter to set captions to false (example-code is in lyte_helper.php_example). 
+
 = Responsive LYTE embeds =
 * The video width in posts and pages will adapt to the width of the container (the div) in which your blogposts/ pages are shown. This means that if your theme is responsive, WP YouTube Lyte will follow.
 * Widgets are not responsive.
