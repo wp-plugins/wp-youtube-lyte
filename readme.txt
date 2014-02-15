@@ -4,7 +4,7 @@ Tags: youtube, video, lyte, lite youtube embeds, html5 video, widget, youtube au
 Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 2.9
 Tested up to: 3.8
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 
 High performance YouTube video, playlist and audio-only embeds which don't slow down your blog and offer optimal accessibility.
 
@@ -108,6 +108,9 @@ Just tell me, I like the feedback! Use the [Contact-page on my blog](http://blog
 * [Rate my plugin on wordpress.org](http://wordpress.org/extend/plugins/wp-youtube-lyte/)
 
 == Changelog ==
+
+= 1.4.1 =
+* set interval for captionscheck to 30 days
 
 = 1.4.0 =
 * new: if microdata is enabled, check if captions are available and if so add the accessibilityFeature=captions markup. Gracefully contributed [by Benetech](http://benetech.org/)

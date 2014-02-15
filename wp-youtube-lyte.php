@@ -292,15 +292,16 @@ function lyte_parse($the_content,$doExcerpt=false) {
 
 						if ($forceCaptionsUpdate===true) {
 							$captionsMeta="";
+							$threshold = 30;
 							if (array_key_exists('captions_timestamp',$yt_resp_array)) {
 								$cache_timestamp = $yt_resp_array["captions_timestamp"];
 								$interval = (strtotime("now") - $cache_timestamp)/60/60/24;
 							} else {
 								$cache_timestamp = false;
-								$interval = 2;
+								$interval = $threshold+1;
 							}
 						
-							if(!is_int($cache_timestamp) || ($interval > 1 && !is_null($yt_resp_array["captions_data"]))) {
+							if(!is_int($cache_timestamp) || ($interval > $threshold && !is_null($yt_resp_array["captions_data"]))) {
 								$yt_resp_array['captions_timestamp'] = strtotime("now");						
 						    		wp_schedule_single_event(strtotime("now") + 60*60, 'schedule_captions_lookup', array($postID, $cachekey, $vid));
 								$yt_resp_precache=json_encode($yt_resp_array);
