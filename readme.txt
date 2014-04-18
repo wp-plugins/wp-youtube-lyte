@@ -3,8 +3,8 @@ Contributors: futtta
 Tags: youtube, video, lyte, lite youtube embeds, html5 video, widget, youtube audio, audio, playlist, performance, accessibility, sidebar, lazy load, responsive, microdata, videoobject
 Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 2.9
-Tested up to: 3.8
-Stable tag: 1.4.1
+Tested up to: 3.9
+Stable tag: 1.4.2
 
 High performance YouTube video, playlist and audio-only embeds which don't slow down your blog and offer optimal accessibility.
 
@@ -108,6 +108,12 @@ Just tell me, I like the feedback! Use the [Contact-page on my blog](http://blog
 * [Rate my plugin on wordpress.org](http://wordpress.org/extend/plugins/wp-youtube-lyte/)
 
 == Changelog ==
+
+= 1.4.2 =
+* Bugfix: Playlists in rss-feeds were broken
+* Bugfix: YouTube-link under a playlist was wrong
+* Improvement: example code in lyte_helper.php to also parse http-youtube-links now only triggers if the link is on a new line
+* Tested with WordPress 3.9
 
 = 1.4.1 =
 * set interval for captionscheck to 30 days

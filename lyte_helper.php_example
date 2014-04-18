@@ -22,7 +22,7 @@ function lyte_force_widgets() {
 /** force wp youtube lyte to act on normal youtube url's as well using lyte_content_preparse filter */
 // add_filter('lyte_content_preparse','lyte_force_nonhttpv',10,1);
 function lyte_force_nonhttpv($content) {
-        $content=preg_replace('/https?:\/\/(www.)?youtu(be.com|.be)\/(watch\?v=)?/','httpv://www.youtube.com/watch?v=',$content);
+	$content=preg_replace('/^https?:\/\/(www.)?youtu(be.com|.be)\/(watch\?v=)?/m','httpv://www.youtube.com/watch?v=',$content);
         return $content;
         }
 
