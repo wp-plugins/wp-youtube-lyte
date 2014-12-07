@@ -13,7 +13,7 @@ Domain Path: /languages
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 $debug=false;
-$lyte_version="1.4.2";
+$lyte_version="1.4.3";
 $lyte_db_version=get_option('lyte_version','none');
 
 /** have we updated? */
@@ -69,7 +69,11 @@ $lyteSettings['hidef']=get_option('lyte_hidef',0);
 $lyteSettings['scheme'] = ( is_ssl() ) ? "https" : "http";
 
 /** API: filter hook to alter $lyteSettings */
-$lyteSettings = apply_filters( 'lyte_settings', $lyteSettings );
+function lyte_settings_enforcer() {
+	global $lyteSettings;
+	$lyteSettings = apply_filters( 'lyte_settings', $lyteSettings );
+	}
+add_action('after_setup_theme','lyte_settings_enforcer');
 
 /** main function to parse the content, searching and replacing httpv-links */
 function lyte_parse($the_content,$doExcerpt=false) {
@@ -80,6 +84,10 @@ function lyte_parse($the_content,$doExcerpt=false) {
 
 	/** API: filter hook to preparse the_content, e.g. to force normal youtube links to be parsed */
 	$the_content = apply_filters( 'lyte_content_preparse',$the_content );
+
+	if (get_option('lyte_greedy','1')==="1"){
+		$the_content=preg_replace('/^https?:\/\/(www.)?youtu(be.com|.be)\/(watch\?v=)?/m','httpv://www.youtube.com/watch?v=',$the_content);
+	}
 
 	if((strpos($the_content, "httpv")!==FALSE)||(strpos($the_content, "httpa")!==FALSE)) {
 		$char_codes = array('&#215;','&#8211;');
@@ -92,7 +100,7 @@ function lyte_parse($the_content,$doExcerpt=false) {
 		$postID = get_the_ID();
 		$toCache_index=array();
 
-		$lytes_regexp="/(?:<p>)?http(v|a):\/\/([a-zA-Z0-9\-\_]+\.|)(youtube|youtu)(\.com|\.be)\/(((watch(\?v\=|\/v\/)|.+?v\=|)([a-zA-Z0-9\-\_]{11}))|(playlist\?list\=(PL[a-zA-Z0-9\-\_]*)))([^\s<]*)(<?:\/p>)?/";
+		$lytes_regexp="/(?:<p>)?http(v|a):\/\/([a-zA-Z0-9\-\_]+\.|)(youtube|youtu)(\.com|\.be)\/(((watch(\?v\=|\/v\/)|.+?v\=|)([a-zA-Z0-9\-\_]{11}))|(playlist\?list\=([a-zA-Z0-9\-\_]*)))([^\s<]*)(<?:\/p>)?/";
 
 		preg_match_all($lytes_regexp, $the_content, $matches, PREG_SET_ORDER); 
 
@@ -310,6 +318,8 @@ function lyte_parse($the_content,$doExcerpt=false) {
 							}
 					  	}
 					}
+					/** API: filter hook to override thumbnail URL */
+					$thumbUrl = apply_filters( 'lyte_match_thumburl', $thumbUrl );
 				}
 			      }
 			}
@@ -402,7 +412,7 @@ function lyte_initer() {
 /* actual initialization */
 function lyte_init() {
 	global $lyteSettings;
-	$lyte_css = ".lyte-wrapper-audio div, .lyte-wrapper div {margin:0px !important; overflow:hidden;} .lyte,.lyMe{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background-color:#777;} .fourthree .lyMe, .fourthree .lyte {padding-bottom:75%;} .lidget{margin-bottom:5px;} .lidget .lyte, .widget .lyMe {padding-bottom:0!important;height:100%!important;} .lyte-wrapper-audio .lyte{height:38px!important;overflow:hidden;padding:0!important} .lyMe iframe, .lyte iframe,.lyte .pL{position:absolute;top:0;left:0;width:100%;height:100%!important;background:no-repeat scroll center #000;background-size:cover;cursor:pointer} .tC{background-color:rgba(0,0,0,0.5);left:0;position:absolute;top:0;width:100%} .tT{color:#FFF;font-family:sans-serif;font-size:12px;height:auto;text-align:left;padding:5px 10px} .tT:hover{text-decoration:underline} .play{background:no-repeat scroll 0 0 transparent;width:90px;height:62px;position:absolute;left:43%;left:calc(50% - 45px);left:-webkit-calc(50% - 45px);top:38%;top:calc(50% - 31px);top:-webkit-calc(50% - 31px);opacity:0.9;} .widget .play {top:30%;top:calc(45% - 31px);top:-webkit-calc(45% - 31px);transform:scale(0.6);-webkit-transform:scale(0.6);-ms-transform:scale(0.6);} .lyte:hover .play{background-position:0 -65px; opacity:1;} .lyte-audio .pL{max-height:38px!important} .lyte-audio iframe{height:438px!important} .ctrl{background:repeat scroll 0 -215px transparent;width:100%;height:40px;bottom:0;left:0;position:absolute} .Lctrl{background:no-repeat scroll 0 -132px transparent;width:158px;height:40px;bottom:0;left:0;position:absolute} .Rctrl{background:no-repeat scroll -42px -174px transparent;width:117px;height:40px;bottom:0;right:0;position:absolute} .lyte-audio .play,.lyte-audio .tC{display:none} .hidden{display:none}";
+	$lyte_css = ".lyte-wrapper-audio div, .lyte-wrapper div {margin:0px !important; overflow:hidden;} .lyte,.lyMe{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background-color:#777;} .fourthree .lyMe, .fourthree .lyte {padding-bottom:75%;} .lidget{margin-bottom:5px;} .lidget .lyte, .widget .lyMe {padding-bottom:0!important;height:100%!important;} .lyte-wrapper-audio .lyte{height:38px!important;overflow:hidden;padding:0!important} .lyMe iframe, .lyte iframe,.lyte .pL{position:absolute;top:0;left:0;width:100%;height:100%!important;background:no-repeat scroll center #000;background-size:cover;cursor:pointer} .tC{background-color:rgba(0,0,0,0.5);left:0;position:absolute;top:0;width:100%} .tT{color:#FFF;font-family:sans-serif;font-size:12px;height:auto;text-align:left;padding:5px 10px} .tT:hover{text-decoration:underline} .play{background:no-repeat scroll 0 0 transparent;width:90px;height:62px;position:absolute;left:43%;left:calc(50% - 45px);left:-webkit-calc(50% - 45px);top:38%;top:calc(50% - 31px);top:-webkit-calc(50% - 31px);opacity:0.9;} .widget .play {top:30%;top:calc(45% - 31px);top:-webkit-calc(45% - 31px);transform:scale(0.6);-webkit-transform:scale(0.6);-ms-transform:scale(0.6);} .lyte:hover .play{background-position:0 -65px; opacity:1;} .lyte-audio .pL{max-height:38px!important} .lyte-audio iframe{height:438px!important} .ctrl{background:repeat scroll 0 -215px transparent;width:100%;height:40px;bottom:0;left:0;position:absolute} .Lctrl{background:no-repeat scroll 0 -132px transparent;width:158px;height:40px;bottom:0;left:0;position:absolute} .Rctrl{background:no-repeat scroll -42px -174px transparent;width:117px;height:40px;bottom:0;right:0;position:absolute} .lyte-audio .play{display:none} .hidden{display:none}";
 	
 	/** API: filter hook to change css */
 	$lyte_css = apply_filters( 'lyte_css', $lyte_css);

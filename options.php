@@ -43,6 +43,7 @@ function register_lyte_settings() {
 	register_setting( 'lyte-settings-group', 'lyte_notification' );
 	register_setting( 'lyte-settings-group', 'lyte_microdata' );
 	register_setting( 'lyte-settings-group', 'lyte_emptycache' );
+	register_setting( 'lyte-settings-group', 'lyte_greedy' );
 }
 
 function lyte_admin_scripts() {
@@ -113,7 +114,7 @@ function lyte_settings_page() {
                 <th scope="row"><?php _e("Player position:","wp-youtube-lyte") ?></th>
                 <td>
                         <fieldset>
-                                <legend class="screen-reader-text"><span>Left, center or right?</span></legend>
+                                <legend class="screen-reader-text"><span><?php _e("Left, center or right?","wp-youtube-lyte"); ?></span></legend>
                                 <label title="Left"><input type="radio" name="lyte_position" value="0" <?php if (get_option('lyte_position','0')==="0") echo "checked" ?> /><?php _e("Left","wp-youtube-lyte") ?></label><br />
 				<label title="Center"><input type="radio" name="lyte_position" value="1" <?php if (get_option('lyte_position','0')==="1") echo "checked" ?> /><?php _e("Center","wp-youtube-lyte") ?></label>
                         </fieldset>
@@ -123,7 +124,7 @@ function lyte_settings_page() {
                 <th scope="row"><?php _e("Try to force HD (experimental)?","wp-youtube-lyte") ?></th>
                 <td>
                         <fieldset>
-                                <legend class="screen-reader-text"><span>HD or not?</span></legend>
+                                <legend class="screen-reader-text"><span><?php _e("HD or not?","wp-youtube-lyte"); ?></span></legend>
                                 <label title="Enable HD?"><input type="radio" name="lyte_hidef" value="1" <?php if (get_option('lyte_hidef','0')==="1") echo "checked" ?> /><?php _e("Enable HD","wp-youtube-lyte") ?></label><br />
                                 <label title="Don't enable HD playback"><input type="radio" name="lyte_hidef" value="0" <?php if (get_option('lyte_hidef','0')!=="1") echo "checked" ?> /><?php _e("No HD (default)","wp-youtube-lyte") ?></label>
                         </fieldset>
@@ -133,9 +134,19 @@ function lyte_settings_page() {
                 <th scope="row"><?php _e("Add microdata?","wp-youtube-lyte") ?></th>
                 <td>
                         <fieldset>
-                                <legend class="screen-reader-text"><span>Add video microdata to the HTML?</span></legend>
+                                <legend class="screen-reader-text"><span><?php _e("Add video microdata to the HTML?","wp-youtube-lyte"); ?></span></legend>
                                 <label title="Sure, add microdata!"><input type="radio" name="lyte_microdata" value="1" <?php if (get_option('lyte_microdata','1')==="1") echo "checked" ?> /><?php _e("Yes (default)","wp-youtube-lyte") ?></label><br />
                                 <label title="No microdata in my HTML please."><input type="radio" name="lyte_microdata" value="0" <?php if (get_option('lyte_microdata','1')!=="1") echo "checked" ?> /><?php _e("No microdata, thanks.","wp-youtube-lyte") ?></label>
+                        </fieldset>
+                </td>
+        </tr>
+        <tr valign="top">
+                <th scope="row"><?php _e("Also act on normal YouTube links?","wp-youtube-lyte") ?></th>
+                <td>
+                        <fieldset>
+                                <legend class="screen-reader-text"><span><?php _e("Also act on normal YouTube links?","wp-youtube-lyte") ?></span></legend>
+                                <label title="That would be great!"><input type="radio" name="lyte_greedy" value="1" <?php if (get_option('lyte_greedy','1')==="1") echo "checked" ?> /><?php _e("Yes (default)","wp-youtube-lyte") ?></label><br />
+                                <label title="No, I'll stick to httpv or shortcocdes."><input type="radio" name="lyte_greedy" value="0" <?php if (get_option('lyte_greedy','1')!=="1") echo "checked" ?> /><?php _e("No thanks.","wp-youtube-lyte") ?></label>
                         </fieldset>
                 </td>
         </tr>
