@@ -19,8 +19,11 @@ $lyte_db_version=get_option('lyte_version','none');
 /** have we updated? */
 if ($lyte_db_version !== $lyte_version) {
 	switch($lyte_db_version) {
-		case "none":
-			lyte_options_update();
+		case "1.4.2":
+		case "1.4.1":
+		case "1.4.0":
+			lyte_not_greedy();
+			break;
 	}
 	update_option('lyte_version',$lyte_version);
 	$lyte_db_version=$lyte_version;
@@ -461,16 +464,9 @@ function shortcode_lyte($atts) {
     }
 
 /** update functions */
-/** upgrade function for 1.1.x to 1.2.x */
-function lyte_options_update() {
-	if (get_option('size')!==false) {
-        	foreach (array('size','show_links','position','hidef','notification') as $oldOptionName) {
-                	$oldOptionValue=get_option($oldOptionName);
-                	$newOptionName="lyte_".$oldOptionName;
-                	update_option($newOptionName,$oldOptionValue);
-                	delete_option($oldOptionName);
-                }
-        }
+/** upgrade, so lyte should not be greedy */
+function lyte_not_greedy() {
+	update_option( "lyte_greedy", "0" );
 }
 
 /** function to flush YT responses from cache */

@@ -1,118 +1,43 @@
-# Copyright (C) 2010 WP YouTube Lyte
+# Copyright (C) 2014 WP YouTube Lyte
 # This file is distributed under the same license as the WP YouTube Lyte package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP YouTube Lyte 0.8.0\n"
+"Project-Id-Version: WP YouTube Lyte 1.4.2\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/wp-youtube-lyte\n"
-"POT-Creation-Date: 2011-10-12 13:51:40+00:00\n"
+"POT-Creation-Date: 2014-12-07 12:21:25+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2010-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2014-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: widget.php:74
-msgid "Title:"
+#: options.php:21
+msgid "Your WP YouTube Lyte cache has been succesfully cleared."
 msgstr ""
 
-#: widget.php:75
-msgid "Size:"
+#: options.php:27
+msgid "There was a problem, the WP YouTube Lyte cache could not be cleared."
 msgstr ""
 
-#: widget.php:91
-msgid "Type:"
-msgstr ""
-
-#: widget.php:99
-msgid "audio"
-msgstr ""
-
-#: widget.php:100
-msgid "video"
-msgstr ""
-
-#: widget.php:104
-msgid "Youtube-URL:"
-msgstr ""
-
-#: widget.php:105
-msgid "Text:"
-msgstr ""
-
-#: player_sizes.inc.php:11
-msgid "Smaller 4:3 player"
-msgstr ""
-
-#: player_sizes.inc.php:16
-msgid "Smaller 16:9 player"
-msgstr ""
-
-#: player_sizes.inc.php:21
-msgid "Standard value, YouTube default for 4:3-ratio video"
-msgstr ""
-
-#: player_sizes.inc.php:26
-msgid "YouTube default for 16:9-ratio video"
-msgstr ""
-
-#: player_sizes.inc.php:31
-msgid "Larger 4:3 player"
-msgstr ""
-
-#: player_sizes.inc.php:36
-msgid "Larger 16:9 player"
-msgstr ""
-
-#: player_sizes.inc.php:41
-msgid "Maxi 4:3 player"
-msgstr ""
-
-#: player_sizes.inc.php:46
-msgid "Maxi 16:9 player"
-msgstr ""
-
-#: wp-youtube-lyte.php:60 wp-youtube-lyte.php:64
-msgid "Watch this playlist on YouTube"
-msgstr ""
-
-#: wp-youtube-lyte.php:65
-msgid "Watch this playlist"
-msgstr ""
-
-#: wp-youtube-lyte.php:65 wp-youtube-lyte.php:78 wp-youtube-lyte.php:82
-msgid "on YouTube"
-msgstr ""
-
-#: wp-youtube-lyte.php:73
-msgid "Watch this video on YouTube"
-msgstr ""
-
-#: wp-youtube-lyte.php:78 wp-youtube-lyte.php:82
-msgid "Watch this video"
-msgstr ""
-
-#: wp-youtube-lyte.php:78
-msgid "or on"
-msgstr ""
-
-#: options.php:37
+#: options.php:71
 msgid "WP YouTube Lyte Settings"
 msgstr ""
 
-#: options.php:39
+#: options.php:73
 msgid ""
 "WP YouTube Lyte inserts \"Lite YouTube Embeds\" in your blog. These look and "
 "feel like normal embedded YouTube, but don't use Flash unless clicked on, "
-"thereby <a href=\"http://blog.futtta.be/2010/08/30/the-state-of-wp-youtube-"
-"lyte/\" target=\"_blank\">reducing download size & rendering time "
-"substantially</a>. When a video is played, WP-YouTube-Lyte can either "
-"activate <a href=\"http://apiblog.youtube.com/2010/07/new-way-to-embed-"
-"youtube-videos.html\" target=\"_blank\">YouTube's embedded html5-player</a> "
-"or the older Flash-version, depending on the settings below."
+"thereby <a href=\"http://blog.futtta.be/2012/04/03/speed-matters-re-"
+"evaluating-wp-youtube-lytes-performance/\" target=\"_blank\">reducing "
+"download size & rendering time substantially</a>. When a video is played, WP-"
+"YouTube-Lyte can either activate <a href=\"http://apiblog.youtube."
+"com/2010/07/new-way-to-embed-youtube-videos.html\" target=\"_blank"
+"\">YouTube's embedded html5-player</a> or the older Flash-version, depending "
+"on the settings below."
 msgstr ""
 
-#: options.php:40
+#: options.php:74
 msgid ""
 "You can place video and audio in your posts and pages by adding one or more "
 "http<strong>v</strong> or http<strong>a</strong> YouTube-links to your post. "
@@ -127,86 +52,214 @@ msgid ""
 "YouTube Lyte FAQ page</a>."
 msgstr ""
 
-#: options.php:41
+#: options.php:75
 msgid ""
 "You can modify WP-YouTube-Lyte's behaviour by changing the following "
 "settings:"
 msgstr ""
 
-#: options.php:48
+#: options.php:84
 msgid "Player size"
 msgstr ""
 
-#: options.php:65
+#: options.php:103
 msgid "Add links below the embedded videos?"
 msgstr ""
 
-#: options.php:67
+#: options.php:106
 msgid "Show links?"
 msgstr ""
 
-#: options.php:68
+#: options.php:107
 msgid " Add YouTube-link."
 msgstr ""
 
-#: options.php:69
+#: options.php:108
 msgid ""
 " Add both a YouTube and an <a href=\"http://icant.co.uk/easy-youtube/docs/"
 "index.html\" target=\"_blank\">Easy YouTube</a>-link."
 msgstr ""
 
-#: options.php:70
+#: options.php:109
 msgid " Don't add any links."
 msgstr ""
 
-#: options.php:75
-msgid "Play video in HD if possible?"
+#: options.php:114
+msgid "Player position:"
 msgstr ""
 
-#: options.php:79
+#: options.php:117
+msgid "Left, center or right?"
+msgstr ""
+
+#: options.php:118
+msgid "Left"
+msgstr ""
+
+#: options.php:119
+msgid "Center"
+msgstr ""
+
+#: options.php:124
+msgid "Try to force HD (experimental)?"
+msgstr ""
+
+#: options.php:127
+msgid "HD or not?"
+msgstr ""
+
+#: options.php:128
 msgid "Enable HD"
 msgstr ""
 
-#: options.php:80
-msgid "No HD, we're smallband!"
+#: options.php:129
+msgid "No HD (default)"
 msgstr ""
 
-#: options.php:85
-msgid "Bonus feature: "
+#: options.php:134
+msgid "Add microdata?"
 msgstr ""
 
-#: options.php:89
-msgid "Disable 3rd party tracking."
+#: options.php:137
+msgid "Add video microdata to the HTML?"
 msgstr ""
 
-#: options.php:90
-msgid "I don't mind 3rd party tracking (default)"
+#: options.php:138 options.php:148
+msgid "Yes (default)"
 msgstr ""
 
-#: options.php:97
+#: options.php:139
+msgid "No microdata, thanks."
+msgstr ""
+
+#: options.php:144 options.php:147
+msgid "Also act on normal YouTube links?"
+msgstr ""
+
+#: options.php:149
+msgid "No thanks."
+msgstr ""
+
+#: options.php:154
+msgid "Empty WP YouTube Lyte's cache"
+msgstr ""
+
+#: options.php:165
 msgid "Save Changes"
 msgstr ""
 
-#: options.php:105
+#: options.php:173
 msgid "futtta about"
 msgstr ""
 
-#. #-#-#-#-#  plugin.pot (WP YouTube Lyte 0.8.0)  #-#-#-#-#
+#. #-#-#-#-#  plugin.pot (WP YouTube Lyte 1.4.2)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
-#: options.php:107
+#: options.php:175
 msgid "WP YouTube Lyte"
 msgstr ""
 
-#: options.php:108
+#: options.php:176
 msgid "WordPress"
 msgstr ""
 
-#: options.php:109
+#: options.php:177
 msgid "Web Technology"
 msgstr ""
 
+#: options.php:181
+msgid "Do not donate for this plugin!"
+msgstr ""
+
+#: player_sizes.inc.php:11
+msgid "Mini 16:9 player"
+msgstr ""
+
+#: player_sizes.inc.php:17
+msgid "Smaller 4:3 player"
+msgstr ""
+
+#: player_sizes.inc.php:23
+msgid "Smaller 16:9 player"
+msgstr ""
+
+#: player_sizes.inc.php:29
+msgid "Standard value, YouTube default for 4:3-ratio video"
+msgstr ""
+
+#: player_sizes.inc.php:35
+msgid "YouTube default for 16:9-ratio video"
+msgstr ""
+
+#: player_sizes.inc.php:41
+msgid "Larger 4:3 player"
+msgstr ""
+
+#: player_sizes.inc.php:47
+msgid "Larger 16:9 player"
+msgstr ""
+
+#: player_sizes.inc.php:53
+msgid "Maxi 4:3 player"
+msgstr ""
+
+#: player_sizes.inc.php:59
+msgid "Maxi 16:9 player"
+msgstr ""
+
+#: widget.php:130
+msgid "Title:"
+msgstr ""
+
+#: widget.php:131
+msgid "Size:"
+msgstr ""
+
+#: widget.php:150
+msgid "Type:"
+msgstr ""
+
+#: widget.php:158
+msgid "audio"
+msgstr ""
+
+#: widget.php:159
+msgid "video"
+msgstr ""
+
+#: widget.php:163
+msgid "Youtube-URL:"
+msgstr ""
+
+#: widget.php:164
+msgid "Text:"
+msgstr ""
+
+#: wp-youtube-lyte.php:181
+msgid "Watch this playlist on YouTube"
+msgstr ""
+
+#: wp-youtube-lyte.php:187
+msgid "Watch this playlist"
+msgstr ""
+
+#: wp-youtube-lyte.php:187 wp-youtube-lyte.php:199 wp-youtube-lyte.php:203
+msgid "on YouTube"
+msgstr ""
+
+#: wp-youtube-lyte.php:194
+msgid "Watch this video on YouTube"
+msgstr ""
+
+#: wp-youtube-lyte.php:199 wp-youtube-lyte.php:203
+msgid "Watch this video"
+msgstr ""
+
+#: wp-youtube-lyte.php:199
+msgid "or on"
+msgstr ""
+
 #. Plugin URI of the plugin/theme
-msgid "http://blog.futtta.be/tag/lyte"
+msgid "http://blog.futtta.be/wp-youtube-lyte/"
 msgstr ""
 
 #. Description of the plugin/theme
