@@ -13,7 +13,7 @@ Domain Path: /languages
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 $debug=false;
-$lyte_version="1.4.3";
+$lyte_version="1.5.0";
 $lyte_db_version=get_option('lyte_version','none');
 
 /** have we updated? */

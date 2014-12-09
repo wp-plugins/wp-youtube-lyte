@@ -9,7 +9,7 @@ Author URI: http://blog.futtta.be/
 */
 
 /**
-available filter hooks: lyte_settings, lyte_content_preparse, lyte_match_preparse_fragment, lyte_match_postparse_template, lyte_content_postparse, lyte_css, lyte_docaptions
+available filter hooks: lyte_settings, lyte_content_preparse, lyte_match_preparse_fragment, lyte_match_postparse_template, lyte_content_postparse, lyte_css, lyte_docaptions, lyte_match_thumburl
 available action hooks; lyte_actionsfilters
 */
 
@@ -94,5 +94,11 @@ function lyte_force_jshead() {
 // add_filter('aioseop_description','lyte_filter_aioseop_description');
 function lyte_filter_aioseop_description($description) {
 	return preg_replace('/\shttp(v|a):\/\/([^\s<]*)/','',$description);
+}
+
+/** function to override thumbnail used for a video */
+// add_filter('lyte_match_thumburl','lyte_my_own_thumburl');
+function lyte_my_own_thumburl($thumb) {
+        return "http://images.vrt.be/mobile320/2014/08/05/8570f3aa-1c9e-11e4-b923-00163edf75b7.jpg";
 }
 ?>

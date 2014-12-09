@@ -109,6 +109,14 @@ Just tell me, I like the feedback! Use the [Contact-page on my blog](http://blog
 
 == Changelog ==
 
+= 1.5.0 =
+* New: WP YouTube Lyte can now also act on normal YouTube URL's. This behavior is by default active on new installations and is by default off for upgrades (from 1.4.x) to avoid unexpected behavior.
+* Improvement (API): apply lyte_settings filter after after_setup_theme actoin as [proposed by Yun](http://blog.futtta.be/wp-youtube-lyte/#comment-61923)
+* Improvement (API): added lyte_match_thumburl filter to set thumbnail as [requested by Simon Barnett](https://wordpress.org/support/topic/hqthumb1-not-reflecting-on-playlists-in-custom-fields?replies=6#post-5861751)
+* Bugfix: for audio-only player make title visible to improve accessibility (for screenreaders) as [requested](http://blog.futtta.be/wp-youtube-lyte/#comment-61928) by [Octocorn](http://www.nemoviz.org/)
+* Bugfix: some playlists were not working, as [reported by jpress](https://wordpress.org/support/topic/individual-playlist-not-working)
+* Updated most translations, added Ukranian (by [Michael Yunat of getvoip.com](http://getvoip.com/blog) and Serbian [by Ogi Djuraskovic of firstsiteguide.com](http://firstsiteguide.com/), kudo's to all who helped!
+
 = 1.4.2 =
 * Bugfix: Playlists in rss-feeds were broken
 * Bugfix: YouTube-link under a playlist was wrong
