@@ -26,6 +26,8 @@ Or using shortcodes:
 `[lyte id="_SQkWbRublY" audio="true" /]`
 `[lyte id="A486E741B25F8E00" playlist="true" /]`
 
+As from 1.5.0 WP YouTube Lyte can also parse normal YouTube links (i.e. without httpv or not using lyte shortcodes). This feature can be enabled and disabled in the settings-page.
+
 WP YouTube Lyte has been written with optimal performance as primary goal, but has been tested for maximum browser-compatibility (iPad included) while keeping an eye on accessibility. Starting with version 1.2.0 lyte embeds are fully responsive and can automatically embed [videoObject microdata](http://support.google.com/webmasters/bin/answer.py?hl=en&answer=2413309) as well. The plugin is fully multi-language, with support for Catalan, Dutch, English, French, German, Hebrew, Romanian, Spanish and Slovene.
 
 Feedback is welcome; see [info in the faq](http://wordpress.org/extend/plugins/wp-youtube-lyte/faq/) for bug reports/ feature requests and feel free to [rate and/or report on compatibility on wordpress.org](http://wordpress.org/extend/plugins/wp-youtube-lyte/).
@@ -78,7 +80,7 @@ In January 2014 [Benetech](http://benetech.org/), a U.S. nonprofit that develops
 * if the content div width gets to around 200 pixels, the LYTE UI will become garbled (YouTube requires the minimum embed width to be 200px as well).
 
 = Can I use WP YouTube Lyte on normal YouTube links? =
-Yes, using the API you can make WP YouTube Lyte parse normal YouTube links. The code for this is in lyte_helper.php_example.
+Yes, starting with version 1.5.0 normal YouTube links are automatically transferred in Lyte embeds as well. You will automagically also get a (non-Lyte) preview of the video in your visual post edit screen. 
 
 = What can I do with the API? =
 A whole lot; there are filters to pre-parse the_content, to change settings, to change the CSS, to change the HTML of the LYTE-div, ... There are examples for all filters (and one action) in lyte_helper.php_example
