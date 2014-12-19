@@ -3,7 +3,7 @@ Contributors: futtta
 Tags: youtube, video, lyte, lite youtube embeds, html5 video, widget, youtube audio, audio, playlist, performance, accessibility, sidebar, lazy load, responsive, microdata, videoobject
 Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 2.9
-Tested up to: 4.0
+Tested up to: 4.1
 Stable tag: 1.5.0
 
 High performance YouTube video, playlist and audio-only embeds which don't slow down your blog and offer optimal accessibility.
