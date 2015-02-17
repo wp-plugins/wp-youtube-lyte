@@ -44,6 +44,7 @@ function register_lyte_settings() {
 	register_setting( 'lyte-settings-group', 'lyte_microdata' );
 	register_setting( 'lyte-settings-group', 'lyte_emptycache' );
 	register_setting( 'lyte-settings-group', 'lyte_greedy' );
+	register_setting( 'lyte-settings-group', 'lyte_yt_api_key' );
 }
 
 function lyte_admin_scripts() {
@@ -55,13 +56,28 @@ function lyte_admin_styles() {
         wp_enqueue_style('zrssfeed', plugins_url('/external/jquery.zrssfeed.css', __FILE__));
 }
 
-function lyte_admin_notice(){
-    echo '<div class="updated"><p>Hello WP YouTube Lyte user!<br />Just to let you know that <strong>the bonus feature, DoNotTrack, was removed</strong> from WP YouTube Lyte. If you would like to keep blocking third party tracking on your blog, you might want to <strong>install <a href="http://wordpress.org/extend/plugins/wp-donottrack/" title="WP DoNotTrack">WP DoNotTrack</a></strong>, which is a more powerful and flexible solution.</p><p>Have a great day!<br /><a href="http://blog.futtta.be/">frank</a>.</div>';
+function lyte_admin_nag_apikey(){
+    _e('<div class="update-nag">For WP YouTube Lyte to function optimally, you need to enter an YouTube API key <a href="options-general.php?page=lyte_settings_page">in the settings screen</a>.</div>');
     }
 
-if (get_option('lyte_notification','0')!=="2") {
-	add_action('admin_notices', 'lyte_admin_notice');
-	update_option('lyte_notification','2');
+$lyte_yt_api_key=get_option('lyte_yt_api_key','');
+$lyte_yt_api_key=apply_filters('lyte_yt_api_key', $lyte_yt_api_key);
+if (empty($lyte_yt_api_key)) {
+	add_action('admin_notices', 'lyte_admin_nag_apikey');
+	}
+
+function lyte_admin_api_error(){
+	$yt_error=json_decode(get_option('lyte_api_error'),1);
+    echo '<div class="error"><p>';
+    _e('WP YouTube Lyte got the following error back from the YouTube API: ');
+	echo "<strong>".$yt_error["reason"]."</strong>";
+	echo " (".date("r",$yt_error["timestamp"]).").";
+    echo '</a>.</p></div>';
+    update_option('lyte_api_error','');
+    }
+
+if (get_option('lyte_api_error','')!=='') {
+	add_action('admin_notices', 'lyte_admin_api_error');
 	}
 
 function lyte_settings_page() {
@@ -70,14 +86,19 @@ function lyte_settings_page() {
 <div class="wrap">
 <h2><?php _e("WP YouTube Lyte Settings","wp-youtube-lyte") ?></h2>
 <div style="float:left;width:70%;">
-<p><?php _e("WP YouTube Lyte inserts \"Lite YouTube Embeds\" in your blog. These look and feel like normal embedded YouTube, but don't use Flash unless clicked on, thereby <a href=\"http://blog.futtta.be/2012/04/03/speed-matters-re-evaluating-wp-youtube-lytes-performance/\" target=\"_blank\">reducing download size & rendering time substantially</a>. When a video is played, WP-YouTube-Lyte can either activate <a href=\"http://apiblog.youtube.com/2010/07/new-way-to-embed-youtube-videos.html\" target=\"_blank\">YouTube's embedded html5-player</a> or the older Flash-version, depending on the settings below.","wp-youtube-lyte") ?></p>
-<p><?php _e("You can place video and audio in your posts and pages by adding one or more http<strong>v</strong> or http<strong>a</strong> YouTube-links to your post. These will automatically be replaced by WP YouTube Lyte with the correct (flash-less) code. To add a video for example, you type a URL like <em>http<strong>v</strong>://www.youtube.com/watch?v=QQPSMRQnNlU</em> or <em>http<strong>v</strong>://www.youtube.com/playlist?list=PLA486E741B25F8E00</em> for a playlist. If you want an audio-only player, you enter <em>http<strong>a</strong>://www.youtube.com/watch?v=BIQIGR-kWtc</em>. There's more info on the <a href=\"http://wordpress.org/extend/plugins/wp-youtube-lyte/faq/\" target=\"_blank\">wordpress.org WP YouTube Lyte FAQ page</a>.","wp-youtube-lyte") ?></p>
-<p><?php _e("You can modify WP-YouTube-Lyte's behaviour by changing the following settings:","wp-youtube-lyte") ?></p>
 <form method="post" action="options.php">
     <?php settings_fields( 'lyte-settings-group' ); ?>
     <table class="form-table">
 	<input type="hidden" name="lyte_notification" value="<?php echo get_option('lyte_notification','0'); ?>" />
-
+		<tr valign="top">
+		<th scope="row"><?php _e("Please enter your YouTube API key.","wp-youtube-lyte") ?></th>
+		<td>
+				<fieldset>
+						<legend class="screen-reader-text"><span><?php _e("Please enter your YouTube API key.","wp-youtube-lyte") ?></span></legend>
+						<label title="API key"><input type="text" size="40" name="lyte_yt_api_key" value="<?php echo get_option('lyte_yt_api_key',''); ?>"></label><br /><?php _e("WP YouTube Lyte uses YouTube's API to fetch information on each video. For your site to use that API, you will have to <a href=\"https://console.developers.google.com/project/\" target=\"_blank\">register your site as a new application</a>, enable the YouTube API for it and and get a server key and fill it out here.","wp-youtube-lyte"); ?>
+				</fieldset>
+		</td>
+        </tr>
         <tr valign="top">
             <th scope="row">Player size:</th>
             <td>

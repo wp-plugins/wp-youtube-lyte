@@ -13,15 +13,19 @@ Domain Path: /languages
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 $debug=false;
-$lyte_version="1.5.0";
+$lyte_version="1.6.0";
 $lyte_db_version=get_option('lyte_version','none');
 
 /** have we updated? */
 if ($lyte_db_version !== $lyte_version) {
 	switch($lyte_db_version) {
+		case "1.5.0":
+			lyte_rm_cache();
+			break;
 		case "1.4.2":
 		case "1.4.1":
 		case "1.4.0":
+			lyte_rm_cache();
 			lyte_not_greedy();
 			break;
 	}
@@ -42,7 +46,6 @@ if (!$debug) {
 /** get paths, language and includes */
 $plugin_dir = basename(dirname(__FILE__)).'/languages';
 load_plugin_textdomain( 'wp-youtube-lyte', null, $plugin_dir );
-$wp_lyte_plugin_url = trailingslashit(get_bloginfo('wpurl')) . PLUGINDIR . '/' . dirname(plugin_basename(__FILE__)) . '/';
 require_once(dirname(__FILE__).'/player_sizes.inc.php');
 require_once(dirname(__FILE__).'/widget.php');
 
@@ -62,7 +65,6 @@ foreach ($pSizeOrder[$pSizeFormat] as $sizeId) {
 /** get other options and push in array*/
 $lyteSettings['sizeArray']=$sArray;
 $lyteSettings['selSize']=$selSize;
-$lyteSettings['path']=$wp_lyte_plugin_url.'lyte/';
 $lyteSettings['links']=get_option('lyte_show_links');
 $lyteSettings['file']=$wyl_file."?wyl_version=".$wyl_version;
 $lyteSettings['ratioClass']= ( $pSizeFormat==="43" ) ? " fourthree" : "";
@@ -78,10 +80,10 @@ function lyte_settings_enforcer() {
 	}
 add_action('after_setup_theme','lyte_settings_enforcer');
 
-/** main function to parse the content, searching and replacing httpv-links */
 function lyte_parse($the_content,$doExcerpt=false) {
-	global $lyteSettings;
-
+	/** main function to parse the content, searching and replacing httpv-links */
+	global $lyteSettings, $toCache_index, $postID, $cachekey;
+	$lyteSettings['path']=plugins_url() . "/" . dirname(plugin_basename(__FILE__)) . '/lyte/';
 	$urlArr=parse_url($lyteSettings['path']);
 	$origin=$urlArr['scheme']."://".$urlArr['host']."/";
 
@@ -118,12 +120,12 @@ function lyte_parse($the_content,$doExcerpt=false) {
 			preg_match("/hqThumb\=([0-1]{1})/",$match[12],$hqThumb);
 			preg_match("/noMicroData\=([0-1]{1})/",$match[12],$microData);
 
-			$thumb="0.jpg";
-                        if (!empty($hqThumb)) {
-                        	if ($hqThumb[0]==="hqThumb=1") {
-                                	$thumb="maxresdefault.jpg";
-                        	}
-                        }
+			$thumb="normal";
+			if (!empty($hqThumb)) {
+				if ($hqThumb[0]==="hqThumb=1") {
+						$thumb="highres";
+				}
+			}
 
 			$noMicroData="0";
 			if (!empty($microData)) {
@@ -166,7 +168,7 @@ function lyte_parse($the_content,$doExcerpt=false) {
 
 			if ($match[1]!=="a") {
  				$divHeight=$lyteSettings[3];
-                                $audioClass="";
+				$audioClass="";
 				$audio=false;
 			} else {
 				$audio=true;
@@ -176,22 +178,22 @@ function lyte_parse($the_content,$doExcerpt=false) {
 
 			$NSimgHeight=$divHeight-20;
 
-	                if ($match[11]!="") {
-        	                $plClass=" playlist";
-                	        $vid=$match[11];
+			if ($match[11]!="") {
+				$plClass=" playlist";
+                $vid=$match[11];
 				switch ($lyteSettings['links']) {
-                                	case "0":
-                                        	$noscript_post="<br />".__("Watch this playlist on YouTube","wp-youtube-lyte");
+					case "0":
+						$noscript_post="<br />".__("Watch this playlist on YouTube","wp-youtube-lyte");
 						$noscript="<noscript><a href=\"".$lyteSettings['scheme']."://youtube.com/playlist?list=".$vid."\">".$noscript_post."</a></noscript>";
 						$lytelinks_txt="";
-                                                break;
-                                        default:
+						break;
+					default:
 						$noscript="";
 						$lytelinks_txt="<div class=\"lL\" style=\"width:".$lyteSettings[2]."px;".$lyteSettings['pos']."\">".__("Watch this playlist","wp-youtube-lyte")." <a href=\"".$lyteSettings['scheme']."://www.youtube.com/playlist?list=".$vid."\">".__("on YouTube","wp-youtube-lyte")."</a></div>";
 				}
 			} else if ($match[9]!="") {
 				$plClass="";
-	                        $vid=$match[9];
+				$vid=$match[9];
 				switch ($lyteSettings['links']) {
 					case "0":
 						$noscript_post="<br />".__("Watch this video on YouTube","wp-youtube-lyte");
@@ -209,122 +211,73 @@ function lyte_parse($the_content,$doExcerpt=false) {
 				$noscript="<noscript><a href=\"".$lyteSettings['scheme']."://youtu.be/".$vid."\"><img src=\"".$lyteSettings['scheme']."://i.ytimg.com/vi/".$vid."/0.jpg\" alt=\"\" width=\"".$lyteSettings[2]."\" height=\"".$NSimgHeight."\" />".$noscript_post."</a></noscript>";
 			}
 
-			/** logic to get video info from cache or get it from YouTube and set it */
-                	if ( $postID ) {
-      				$cachekey = '_lyte_' . $vid;
-                        	$yt_resp = get_post_meta( $postID, $cachekey, true );
-				if (!empty($yt_resp)) {
-					$yt_resp = gzuncompress(base64_decode($yt_resp));
-				}
-			} else {
-				$yt_resp = "";
+			// fetch data from YT api (v2 or v3)
+			if ($plClass===" playlist") {
+				$isPlaylist=true;
 			}
+			$cachekey = '_lyte_' . $vid;
+			$yt_resp_array=lyte_get_YT_resp($vid,$isPlaylist,$cachekey);
 
-                        if ( empty( $yt_resp ) ) {
-                       		// get info from youtube 
-				$yt_api_base = "http://gdata.youtube.com/feeds/api/";
-				
-				if ($plClass===" playlist") {
-					$yt_api_target = "playlists/".$vid."?v=2&alt=json&fields=id,title,author,updated,media:group(media:thumbnail)";
-				} else {
-					$yt_api_target = "videos/".$vid."?v=2&alt=json&fields=id,title,published,content,media:group(media:description,yt:duration,yt:aspectRatio),author(name)";
-				}
-
-				$yt_api_url = $yt_api_base.$yt_api_target;
-				$yt_resp = wp_remote_get($yt_api_url);
-
-				// check if we got through
-				if (is_wp_error($yt_resp)) {
-					$yt_resp="";
-				} else {
-					$yt_resp = wp_remote_retrieve_body($yt_resp);
-
-					if ( $postID ) {
-                       				// we can cache the result
-						$yt_resp_array=json_decode($yt_resp,true);
-												
-						if(is_array($yt_resp_array)) {
-							//entry is new
-							$yt_resp_array['lyte_date_added']=time();
-							
-							$yt_resp_precache=json_encode($yt_resp_array);
-
-							// then gzip + base64 (to limit amount of data + solve problems with wordpress removing slashes)
-							$yt_resp_precache=base64_encode(gzcompress($yt_resp_precache));
-
-							// and do the actual caching
-							$toCache = ( $yt_resp_precache ) ? $yt_resp_precache : '{{unknown}}';
-                       					update_post_meta( $postID, $cachekey, $toCache );
-
-							// and finally add new cache-entry to toCache_index which will be added to lyte_cache_index pref
-							$toCache_index[]=$cachekey;
-						}
-					}
-				}
-			}
-
-                        // If there was a result from youtube or from cache, use it
-                        if ( $yt_resp ) {
-				$yt_resp_array=json_decode($yt_resp,true);
-				
+            // If there was a result from youtube or from cache, use it
+            if ( $yt_resp_array ) {				
 				if (is_array($yt_resp_array)) {
-				  if ($plClass===" playlist") {
-					$yt_title="Playlist: ".esc_attr(sanitize_text_field(@$yt_resp_array['feed']['title']['$t']));
-					$thumbUrl=esc_url(@$yt_resp_array['feed']['media$group']['media$thumbnail'][2]['url']);
-					$dateField=sanitize_text_field(@$yt_resp_array['feed']['updated']['$t']);
-					$duration="";
-					$description=$yt_title;
-				  } else {
-					$yt_title=esc_attr(sanitize_text_field(@$yt_resp_array['entry']['title']['$t']));
-					$thumbUrl=esc_url($lyteSettings['scheme']."://i.ytimg.com/vi/".$vid."/".$thumb);
-					$dateField=sanitize_text_field(@$yt_resp_array['entry']['published']['$t']);
-					$duration="T".sanitize_text_field(@$yt_resp_array['entry']['media$group']['yt$duration']['seconds'])."S";
-					$description=esc_attr(sanitize_text_field(@$yt_resp_array['entry']['media$group']['media$description']['$t']));
-					
-					// captions, thanks to Benetech
-					$captionsMeta="";
-					$doCaptions=true;
-
-					/** API: filter hook to disable captions */
-					$doCaptions = apply_filters( 'lyte_docaptions', $doCaptions );
-
-					if(($lyteSettings['microdata'] === "1")&&($noMicroData !== "1" )&&($doCaptions === true)) {
-						if (array_key_exists('captions_data',$yt_resp_array)) {
-							if ($yt_resp_array["captions_data"]) {
-								$captionsMeta="<meta itemprop=\"accessibilityFeature\" content=\"captions\" />";
-								$forceCaptionsUpdate=false;
+					if ($isPlaylist!==true) {
+						// captions, thanks to Benetech
+						$captionsMeta="";
+						$doCaptions=true;
+	
+						/** API: filter hook to disable captions */
+						$doCaptions = apply_filters( 'lyte_docaptions', $doCaptions );
+	
+						if(($lyteSettings['microdata'] === "1")&&($noMicroData !== "1" )&&($doCaptions === true)) {
+							if (array_key_exists('captions_data',$yt_resp_array)) {
+								if ($yt_resp_array["captions_data"]=="true") {
+									$captionsMeta="<meta itemprop=\"accessibilityFeature\" content=\"captions\" />";
+									$forceCaptionsUpdate=false;
+								} else {
+									$forceCaptionsUpdate=true;
+								}
 							} else {
 								$forceCaptionsUpdate=true;
+								$yt_resp_array["captions_data"]=false;
 							}
-						} else {
-							$forceCaptionsUpdate=true;
-							$yt_resp_array["captions_data"]=false;
+	
+							if ($forceCaptionsUpdate===true) {
+								$captionsMeta="";
+								$threshold = 30;
+								if (array_key_exists('captions_timestamp',$yt_resp_array)) {
+									$cache_timestamp = $yt_resp_array["captions_timestamp"];
+									$interval = (strtotime("now") - $cache_timestamp)/60/60/24;
+								} else {
+									$cache_timestamp = false;
+									$interval = $threshold+1;
+								}
+							
+								if(!is_int($cache_timestamp) || ($interval > $threshold && !is_null( $yt_resp_array["captions_data"]))) {
+									$yt_resp_array['captions_timestamp'] = strtotime("now");
+							    	wp_schedule_single_event(strtotime("now") + 60*60, 'schedule_captions_lookup', array($postID, $cachekey, $vid));
+									$yt_resp_precache=json_encode($yt_resp_array);
+									$toCache=base64_encode(gzcompress($yt_resp_precache));
+									update_post_meta($postID, $cachekey, $toCache); 
+								}
+						  	}
 						}
-
-						if ($forceCaptionsUpdate===true) {
-							$captionsMeta="";
-							$threshold = 30;
-							if (array_key_exists('captions_timestamp',$yt_resp_array)) {
-								$cache_timestamp = $yt_resp_array["captions_timestamp"];
-								$interval = (strtotime("now") - $cache_timestamp)/60/60/24;
-							} else {
-								$cache_timestamp = false;
-								$interval = $threshold+1;
-							}
-						
-							if(!is_int($cache_timestamp) || ($interval > $threshold && !is_null($yt_resp_array["captions_data"]))) {
-								$yt_resp_array['captions_timestamp'] = strtotime("now");						
-						    		wp_schedule_single_event(strtotime("now") + 60*60, 'schedule_captions_lookup', array($postID, $cachekey, $vid));
-								$yt_resp_precache=json_encode($yt_resp_array);
-								$toCache=base64_encode(gzcompress($yt_resp_precache));
-								update_post_meta($postID, $cachekey, $toCache); 
-							}
-					  	}
 					}
-					/** API: filter hook to override thumbnail URL */
-					$thumbUrl = apply_filters( 'lyte_match_thumburl', $thumbUrl );
-				}
-			      }
+					if (($thumb==="highres") && (!empty($yt_resp_array["HQthumbUrl"]))){
+						$thumbUrl=$yt_resp_array["HQthumbUrl"];
+					} else {
+						if (!empty($yt_resp_array["thumbUrl"])) {
+							$thumbUrl=$yt_resp_array["thumbUrl"];
+						} else {
+							$thumbUrl="//i.ytimg.com/vi/".$vid."/hqdefault.jpg";
+						} 
+					}
+				/** API: filter hook to override thumbnail URL */
+				$thumbUrl = apply_filters( 'lyte_match_thumburl', $thumbUrl );
+		      } else {
+				// no useable result from youtube, fallback on video thumbnail (doesn't work on playlist)
+				$thumbUrl="//i.ytimg.com/vi/".$vid."/hqdefault.jpg";
+			  }
 			}
 		
 			if ($audio===true) {
@@ -342,16 +295,15 @@ function lyte_parse($the_content,$doExcerpt=false) {
 				$lytetemplate = "<a href=\"".$postURL."\"><img src=\"".$thumbUrl."\" alt=\"YouTube Video\"></a>".$textLink;
 				$templateType="feed";
 			} elseif (($audio !== true) && ( $plClass !== " playlist") && (($lyteSettings['microdata'] === "1")&&($noMicroData !== "1" ))) {
-				$lytetemplate = $wrapper."<div class=\"lyMe".$audioClass.$hidefClass.$plClass.$qsaClass."\" id=\"WYL_".$vid."\" itemprop=\"video\" itemscope itemtype=\"http://schema.org/VideoObject\"><meta itemprop=\"thumbnailUrl\" content=\"".$thumbUrl."\" /><meta itemprop=\"embedURL\" content=\"http://www.youtube.com/embed/".$vid."\" /><meta itemprop=\"uploadDate\" content=\"".$dateField."\" />".$captionsMeta."<div id=\"lyte_".$vid."\" data-src=\"".$thumbUrl."\" class=\"pL\"><div class=\"tC".$titleClass."\"><div class=\"tT\" itemprop=\"name\">".$yt_title."</div></div><div class=\"play\"></div><div class=\"ctrl\"><div class=\"Lctrl\"></div><div class=\"Rctrl\"></div></div></div>".$noscript."<meta itemprop=\"description\" content=\"".$description."\"></div></div>".$lytelinks_txt;
+				$lytetemplate = $wrapper."<div class=\"lyMe".$audioClass.$hidefClass.$plClass.$qsaClass."\" id=\"WYL_".$vid."\" itemprop=\"video\" itemscope itemtype=\"http://schema.org/VideoObject\"><meta itemprop=\"thumbnailUrl\" content=\"".$thumbUrl."\" /><meta itemprop=\"embedURL\" content=\"http://www.youtube.com/embed/".$vid."\" /><meta itemprop=\"uploadDate\" content=\"".$yt_resp_array["dateField"]."\" />".$captionsMeta."<div id=\"lyte_".$vid."\" data-src=\"".$thumbUrl."\" class=\"pL\"><div class=\"tC".$titleClass."\"><div class=\"tT\" itemprop=\"name\">".$yt_resp_array["title"]."</div></div><div class=\"play\"></div><div class=\"ctrl\"><div class=\"Lctrl\"></div><div class=\"Rctrl\"></div></div></div>".$noscript."<meta itemprop=\"description\" content=\"".$yt_resp_array["description"]."\"></div></div>".$lytelinks_txt;
 				$templateType="postMicrodata";
 			} else {
-				$lytetemplate = $wrapper."<div class=\"lyMe".$audioClass.$hidefClass.$plClass.$qsaClass."\" id=\"WYL_".$vid."\"><div id=\"lyte_".$vid."\" data-src=\"".$thumbUrl."\" class=\"pL\"><div class=\"tC".$titleClass."\"><div class=\"tT\">".$yt_title."</div></div><div class=\"play\"></div><div class=\"ctrl\"><div class=\"Lctrl\"></div><div class=\"Rctrl\"></div></div></div>".$noscript."</div></div>".$lytelinks_txt;
+				$lytetemplate = $wrapper."<div class=\"lyMe".$audioClass.$hidefClass.$plClass.$qsaClass."\" id=\"WYL_".$vid."\"><div id=\"lyte_".$vid."\" data-src=\"".$thumbUrl."\" class=\"pL\"><div class=\"tC".$titleClass."\"><div class=\"tT\">".$yt_resp_array["title"]."</div></div><div class=\"play\"></div><div class=\"ctrl\"><div class=\"Lctrl\"></div><div class=\"Rctrl\"></div></div></div>".$noscript."</div></div>".$lytelinks_txt;
 				$templateType="post";
 			}
 
 			/** API: filter hook to parse template before being applied */
 			$lytetemplate = apply_filters( 'lyte_match_postparse_template',$lytetemplate,$templateType );
-
 			$the_content = preg_replace($lytes_regexp, $lytetemplate, $the_content, 1);
         }
 
@@ -373,8 +325,8 @@ function lyte_parse($the_content,$doExcerpt=false) {
 	return $the_content;
 }
 
-// captions lookup at YouTube via a11ymetadata.org
 function captions_lookup($postID, $cachekey, $vid) {
+	// captions lookup at YouTube via a11ymetadata.org
 	$response = wp_remote_request("http://api.a11ymetadata.org/captions/youtubeid=".$vid."/youtube");
 	
 	if(!is_wp_error($response)) {	
@@ -401,6 +353,127 @@ function captions_lookup($postID, $cachekey, $vid) {
 			}
 		}
 	}
+}
+
+function lyte_get_YT_resp($vid,$playlist=false,$cachekey) {
+	/** logic to get video info from cache or get it from YouTube and set it */
+	global $postID, $cachekey, $toCache_index;
+	if ( $postID ) {
+        $cache_resp = get_post_meta( $postID, $cachekey, true );
+		if (!empty($cache_resp)) {
+			$_thisLyte = json_decode(gzuncompress(base64_decode($cache_resp)),1);
+			}
+	} else {
+		$_thisLyte = "";
+	}
+
+	if ( empty( $_thisLyte ) ) {
+		// get info from youtube
+		// first get yt api key
+		$lyte_yt_api_key = get_option('lyte_yt_api_key','');
+		$lyte_yt_api_key = apply_filters('lyte_yt_api_key', $lyte_yt_api_key);
+
+		if (empty($lyte_yt_api_key)) {
+			// v2 (if no API key)
+			$yt_api_base = "http://gdata.youtube.com/feeds/api/";
+						
+			if ($playlist) {
+				$yt_api_target = "playlists/".$vid."?v=2&alt=json&fields=id,title,author,updated,media:group(media:thumbnail)";
+			} else {
+				$yt_api_target = "videos/".$vid."?v=2&alt=json&fields=id,title,published,content,media:group(media:description,yt:duration,yt:aspectRatio),author(name)";
+			}
+		} else {
+			// v3
+			$yt_api_base = "https://www.googleapis.com/youtube/v3/";
+			
+			if ($playlist) {
+				$yt_api_target = "playlists?part=snippet%2C+id&id=".$vid."&key=".$lyte_yt_api_key;
+			} else {
+				$yt_api_target = "videos?part=id%2C+snippet%2C+contentDetails&id=".$vid."&key=".$lyte_yt_api_key;
+			}
+		}
+
+		$yt_api_url = $yt_api_base.$yt_api_target;
+		$yt_resp = wp_remote_get($yt_api_url);
+
+		// check if we got through
+		if (is_wp_error($yt_resp)) {
+			$_thisLyte="";
+		} else {
+			$yt_resp_array=json_decode(wp_remote_retrieve_body($yt_resp),true);
+													
+			if(is_array($yt_resp_array)) {
+				// extract relevant data
+				if (empty($lyte_yt_api_key)) {
+					// v2
+					if ($playlist) {
+						$_thisLyte['title']="Playlist: ".esc_attr(sanitize_text_field(@$yt_resp_array['feed']['title']['$t']));
+						$_thisLyte['thumbUrl']=esc_url(@$yt_resp_array['feed']['media$group']['media$thumbnail'][2]['url']);
+						$_thisLyte['HQthumbUrl']="";
+						$_thisLyte['dateField']=sanitize_text_field(@$yt_resp_array['feed']['updated']['$t']);
+						$_thisLyte['duration']="";
+						$_thisLyte['description']=$yt_title;
+						$_thisLyte['captions_data']="false";
+						$_thisLyte['captions_timestamp'] = "";
+					} else {
+						$_thisLyte['title']=esc_attr(sanitize_text_field(@$yt_resp_array['entry']['title']['$t']));
+						$_thisLyte['thumbUrl']="//i.ytimg.com/vi/".$vid."/hqdefault.jpg";
+						$_thisLyte['HQthumbUrl']="//i.ytimg.com/vi/".$vid."/maxresdefault.jpg";
+						$_thisLyte['dateField']=sanitize_text_field(@$yt_resp_array['entry']['published']['$t']);
+						$_thisLyte['duration']="T".sanitize_text_field(@$yt_resp_array['entry']['media$group']['yt$duration']['seconds'])."S";
+						$_thisLyte['description']=esc_attr(sanitize_text_field(@$yt_resp_array['entry']['media$group']['media$description']['$t']));
+						$_thisLyte['captions_data']="false";
+						$_thisLyte['captions_timestamp'] = "";
+					}
+				} else {
+					// v3
+					if (in_array(wp_remote_retrieve_response_code($yt_resp),array(400,403,404))) {
+						$yt_error['code']=wp_remote_retrieve_response_code($yt_resp);
+						$yt_error['reason']=$yt_resp_array['error']['errors'][0]['reason'];
+						$yt_error['timestamp']=strtotime("now");
+						update_option("lyte_api_error",json_encode($yt_error));
+					} else {
+						if ($playlist) {
+							$_thisLyte['title']="Playlist: ".esc_attr(sanitize_text_field(@$yt_resp_array['items'][0]['snippet']['title']));
+							$_thisLyte['thumbUrl']=esc_url(@$yt_resp_array['items'][0]['snippet']['thumbnails']['high']['url']);
+							$_thisLyte['HQthumbUrl']=esc_url(@$yt_resp_array['items'][0]['snippet']['thumbnails']['maxres']['url']);
+							$_thisLyte['dateField']=sanitize_text_field(@$yt_resp_array['items'][0]['snippet']['publishedAt']);
+							$_thisLyte['duration']="";
+							$_thisLyte['description']=esc_attr(sanitize_text_field(@$yt_resp_array['items'][0]['snippet']['description']));
+							$_thisLyte['captions_data']="false";
+							$_thisLyte['captions_timestamp'] = "";
+						} else {
+							$_thisLyte['title']=esc_attr(sanitize_text_field(@$yt_resp_array['items'][0]['snippet']['title']));
+							$_thisLyte['thumbUrl']=esc_url(@$yt_resp_array['items'][0]['snippet']['thumbnails']['high']['url']);
+							$_thisLyte['HQthumbUrl']=esc_url(@$yt_resp_array['items'][0]['snippet']['thumbnails']['maxres']['url']);
+							$_thisLyte['dateField']=sanitize_text_field(@$yt_resp_array['items'][0]['snippet']['publishedAt']);
+							$_thisLyte['duration']=sanitize_text_field(@$yt_resp_array['items'][0]['contentDetails']['duration']);
+							$_thisLyte['description']=esc_attr(sanitize_text_field(@$yt_resp_array['items'][0]['snippet']['description']));
+							$_thisLyte['captions_data']=sanitize_text_field(@$yt_resp_array['items'][0]['contentDetails']['caption']);
+							$_thisLyte['captions_timestamp'] = strtotime("now");
+						}
+					}
+				}
+					
+				// try to cache the result
+				if ( $postID ) {
+					$_thisLyte['lyte_date_added']=time();
+					$yt_resp_precache=json_encode($_thisLyte);
+
+					// then gzip + base64 (to limit amount of data + solve problems with wordpress removing slashes)
+					$yt_resp_precache=base64_encode(gzcompress($yt_resp_precache));
+
+					// and do the actual caching
+					$toCache = ( $yt_resp_precache ) ? $yt_resp_precache : '{{unknown}}';
+					update_post_meta( $postID, $cachekey, $toCache );
+
+					// and finally add new cache-entry to toCache_index which will be added to lyte_cache_index pref
+					$toCache_index[]=$cachekey;
+				}
+			}
+		}
+	}
+	return $_thisLyte;
 }
 
 /* only add js/css once and only if needed */
@@ -493,9 +566,15 @@ function lyte_preparse($videoId) {
     return lyte_parse('httpv://www.youtube.com/watch?v='.$videoId);
 }
 
+function lyte_add_action_link($links) {
+	$links[]='<a href="' . admin_url( 'options-general.php?page=lyte_settings_page' ) . '">' . _e('Settings') . '</a>';
+	return $links;
+}
+
 /** hooking it all up to wordpress */
 if ( is_admin() ) {
-        require_once(dirname(__FILE__).'/options.php');
+	require_once(dirname(__FILE__).'/options.php');
+	add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), 'lyte_add_action_link' );
 } else {
 	add_filter('the_content', 'lyte_parse', 4);
 	add_shortcode("lyte", "shortcode_lyte");
