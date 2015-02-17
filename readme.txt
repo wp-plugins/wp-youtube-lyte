@@ -112,7 +112,7 @@ Just tell me, I like the feedback! Use the [Contact-page on my blog](http://blog
 == Changelog ==
 
 = 1.6.0 =
-* New: support for YouTube API v3, requiring a server API key to be provided (due to [YouTube closing down the anonymous v2 API]http://blog.futtta.be/2015/01/27/wp-youtube-lyte-and-youtube-api-v2-end-of-life/())
+* New: support for YouTube API v3, requiring a server API key to be provided (due to [YouTube closing down the anonymous v2 API](http://blog.futtta.be/2015/01/27/wp-youtube-lyte-and-youtube-api-v2-end-of-life/))
 * Bugfix: better support for renamed wp-content directories (kudos to [Wendihihihi](https://wordpress.org/support/topic/plugin-doesnt-work-in-custom-plugins-dir))
 
 = 1.5.0 =
