@@ -432,6 +432,7 @@ function lyte_get_YT_resp($vid,$playlist=false,$cachekey) {
 						$yt_error['reason']=$yt_resp_array['error']['errors'][0]['reason'];
 						$yt_error['timestamp']=strtotime("now");
 						update_option("lyte_api_error",json_encode($yt_error));
+						$_thisLyte="";
 					} else {
 						if ($playlist) {
 							$_thisLyte['title']="Playlist: ".esc_attr(sanitize_text_field(@$yt_resp_array['items'][0]['snippet']['title']));
@@ -456,7 +457,7 @@ function lyte_get_YT_resp($vid,$playlist=false,$cachekey) {
 				}
 					
 				// try to cache the result
-				if ( $postID ) {
+				if ( ($postID) && (!empty($_thisLyte))) {
 					$_thisLyte['lyte_date_added']=time();
 					$yt_resp_precache=json_encode($_thisLyte);
 
