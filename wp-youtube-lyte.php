@@ -359,19 +359,23 @@ function lyte_get_YT_resp($vid,$playlist=false,$cachekey) {
 	/** logic to get video info from cache or get it from YouTube and set it */
 	global $postID, $cachekey, $toCache_index;
 	if ( $postID ) {
-        $cache_resp = get_post_meta( $postID, $cachekey, true );
+        	$cache_resp = get_post_meta( $postID, $cachekey, true );
 		if (!empty($cache_resp)) {
 			$_thisLyte = json_decode(gzuncompress(base64_decode($cache_resp)),1);
+			// make sure there are not old APIv2 full responses in cache
+			if ($_thisLyte['entry']['xmlns$yt']==="http://gdata.youtube.com/schemas/2007") {
+				$_thisLyte = "";
 			}
+		}
 	} else {
 		$_thisLyte = "";
 	}
 
 	if ( empty( $_thisLyte ) ) {
 		// get info from youtube
-		// first get yt api key
-		$lyte_yt_api_key = get_option('lyte_yt_api_key','');
-		$lyte_yt_api_key = apply_filters('lyte_yt_api_key', $lyte_yt_api_key);
+        	// first get yt api key
+	        $lyte_yt_api_key = get_option('lyte_yt_api_key','');
+		$lyte_yt_api_key = apply_filters('lyte_filter_yt_api_key', $lyte_yt_api_key);
 
 		if (empty($lyte_yt_api_key)) {
 			// v2 (if no API key)
@@ -398,7 +402,7 @@ function lyte_get_YT_resp($vid,$playlist=false,$cachekey) {
 
 		// check if we got through
 		if (is_wp_error($yt_resp)) {
-			$_thisLyte="";
+			$_thisLyte = "";
 		} else {
 			$yt_resp_array=json_decode(wp_remote_retrieve_body($yt_resp),true);
 													
@@ -432,7 +436,7 @@ function lyte_get_YT_resp($vid,$playlist=false,$cachekey) {
 						$yt_error['reason']=$yt_resp_array['error']['errors'][0]['reason'];
 						$yt_error['timestamp']=strtotime("now");
 						update_option("lyte_api_error",json_encode($yt_error));
-						$_thisLyte="";
+						$_thisLyte = "";
 					} else {
 						if ($playlist) {
 							$_thisLyte['title']="Playlist: ".esc_attr(sanitize_text_field(@$yt_resp_array['items'][0]['snippet']['title']));
