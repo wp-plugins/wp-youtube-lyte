@@ -42,12 +42,21 @@ Just install form your Wordpress "Plugins|Add New" screen and all will be well. 
 
 == Frequently Asked Questions ==
 
+= Why does WP YouTube Lyte need to access the YouTube API? What is an API anyway? =
+An API is a way to have two pieces of software talk to each other to exchange information. In this case WP YouTube Lyte contact YouTube to ask it the thumbnail, the title and the description of the video you added. The thumbnail and title are visible on the webpage (in the Lyte player) while the description is in the HTML as microdata for search engines optimization reasons.
+
+= What is an API key and why does WP YouTube Lyte need one all of a sudden? =
+Up until WP YouTube Lyte 1.5.0 the v2 YouTube API was used, but [in September 2014 Google announced it was going to decommission that version, forcing the switch to v3](http://youtube-eng.blogspot.be/2014/09/have-you-migrated-to-data-api-v3-yet.html?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed:+YouTubeEngDevBlog+%28YouTube+Engineering+and+Developers+Blog%29). A big difference between v2 and v3 is that, whereas v2 allowed "anonymous" requests, this is not the case for v3 any more. This means any request to the YouTube API v3 has to be identified with a key (a string with seamingly random letters & numbers). You can get such a key from Google for free (see below) and you have to enter that in WP YouTube Lyte's settings page.
+
+= What will happen if I don't provide an API key? =
+For as long as Google keeps the v2 API accessible (at least until April 20, 2015), everything will work just fine as WP YouTube Lyte will fall back to that version if no API key was provided. When Google does close access to the v2 API, WP YouTube Lyte will work, rendering Lyte players, but title and description will be empty. For individual videos a thumbnail will be shown, but not for playlists.
+
 = What does "html5 video support" mean? =
 When playing, HTML5 video will not be visible for everyone (see requirements). Indeed some visitors will see the fallback Flash video instead.
 
 = What are the requirements to see embedded YouTube HTML5 video? =
-* It only works in browsers that support the h264 (Safari, Chrome, IE9) or WebM (currently Chrome, Opera and Firefox) video codecs
-* Your visitor has to be enrolled in the [YouTube html5 beta](http://www.youtube.com/html5) except if no Flash in present, in which case YouTube will attempt to fall-back to HTML5 as well
+* Beginning 2015 YouTube announced it would switch to HTML5 video by default.
+* It only works in browsers that support the h264 or WebM video codecs, most modern browser should work.
 
 = Does WP YouTube Lyte protect my visitor's privacy? =
 As opposed to some of the [most important](http://blog.futtta.be/2010/12/15/wordpress-com-stats-trojan-horse-for-quantcast-tracking/) [plugins](http://blog.futtta.be/2010/01/22/add-to-any-removed-from-here/) there is no 3rd party tracking code in WP YouTube Lyte, but YouTube off course does see visitor requests coming in (see also the youtube-nocookie.com remark in Bugs/Issues below).
@@ -89,7 +98,7 @@ A whole lot; there are filters to pre-parse the_content, to change settings, to 
 Copy it to /wp-content/plugins/lyte_helper.php and activate it in WordPress' plugin page. After that you can simple remove the one of the comment-sequences (double-slash) to activate one (or more) of the functions in there.
 
 = Problem with All In One Seo Pack =
-All in One SEO Pack be default generates a description which still has httpv-links in it. To remove those, you'll have to use lyte_helper.php (see above) and add lyte_filter_aioseop_description to the aioseop-filter in there.
+All in One SEO Pack be default generates a description which still has httpv-links in it. To remove those, you'll have to use (example code in) lyte_helper.php (see above) and add lyte_filter_aioseop_description to the aioseop-filter in there.
 
 = When I click on a LYTE video, a link to YouTube opens, what's up with that? =
 You probably added a link (<a href>)around the httpv-url. No link is needed, just the httpv-url.
