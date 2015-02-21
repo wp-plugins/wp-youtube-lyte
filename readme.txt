@@ -43,25 +43,24 @@ Just install form your Wordpress "Plugins|Add New" screen and all will be well. 
 == Frequently Asked Questions ==
 
 = Why does WP YouTube Lyte need to access the YouTube API? What is an API anyway? =
-An API is a way to have two pieces of software talk to each other to exchange information. In this case WP YouTube Lyte contact YouTube to ask it the thumbnail, the title and the description of the video you added. The thumbnail and title are visible on the webpage (in the Lyte player) while the description is in the HTML as microdata for search engines optimization reasons.
+An API is a way to have two pieces of software talk to each other to exchange information. In this case WP YouTube Lyte contacts YouTube to ask it for the thumbnail, the title and the description of the video you added. The thumbnail and title are visible on the webpage (in the Lyte player) while the description is in the HTML as microdata for search engines optimization reasons (see below).
 
 = What is an API key and why does WP YouTube Lyte need one all of a sudden? =
 Up until WP YouTube Lyte 1.5.0 the v2 YouTube API was used, but [in September 2014 Google announced it was going to decommission that version, forcing the switch to v3](http://youtube-eng.blogspot.be/2014/09/have-you-migrated-to-data-api-v3-yet.html?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed:+YouTubeEngDevBlog+%28YouTube+Engineering+and+Developers+Blog%29). A big difference between v2 and v3 is that, whereas v2 allowed "anonymous" requests, this is not the case for v3 any more. This means any request to the YouTube API v3 has to be identified with a key (a string with seamingly random letters & numbers). You can get such a key from Google for free (see below) and you have to enter that in WP YouTube Lyte's settings page.
 
 = What will happen if I don't provide an API key? =
-For as long as Google keeps the v2 API accessible (at least until April 20, 2015), everything will work just fine as WP YouTube Lyte will fall back to that version if no API key was provided. When Google does close access to the v2 API, WP YouTube Lyte will work, rendering Lyte players, but title and description will be empty. For individual videos a thumbnail will be shown, but not for playlists.
+For as long as Google keeps the v2 API accessible (at least until April 20, 2015), everything will work just fine as WP YouTube Lyte will fall back to that version if no API key was provided. When Google does close access to the v2 API, WP YouTube Lyte will work, rendering Lyte players, but without title and description. For individual videos a thumbnail will always be shown, but not for playlists.
 
 = What does "html5 video support" mean? =
 When playing, HTML5 video will not be visible for everyone (see requirements). Indeed some visitors will see the fallback Flash video instead.
 
 = What are the requirements to see embedded YouTube HTML5 video? =
 * Beginning 2015 YouTube announced it would switch to HTML5 video by default.
-* It only works in browsers that support the h264 or WebM video codecs, most modern browser should work.
+* This will work in browsers that support the h264 or WebM video codecs, most modern browser should work.
+* Browsers that don't support those codecs will, upon playing, fall back to Flash.
 
 = Does WP YouTube Lyte protect my visitor's privacy? =
-As opposed to some of the [most important](http://blog.futtta.be/2010/12/15/wordpress-com-stats-trojan-horse-for-quantcast-tracking/) [plugins](http://blog.futtta.be/2010/01/22/add-to-any-removed-from-here/) there is no 3rd party tracking code in WP YouTube Lyte, but YouTube off course does see visitor requests coming in (see also the youtube-nocookie.com remark in Bugs/Issues below).
-
-If you want to stop YouTube from setting cookies, add the "&showinfo=0" parameter to your httpv-url. This will prevent the call to the Youtube API, which is used to fetch the title of the video, and stop YouTube-cookies from being set when the LYTE-player is loaded. This however does not work for playlists (the API-call is needed to be able to present something meaningful). You should also take into account that any user actually playing the video, will always receive YouTube-cookies ([as is the case with youtube-nocokie embeds as well](http://support.google.com/youtube/bin/answer.py?hl=en&answer=171780&expand=PrivacyEnhancedMode#privacy)).
+As opposed to some of the [most important](http://blog.futtta.be/2010/12/15/wordpress-com-stats-trojan-horse-for-quantcast-tracking/) [plugins](http://blog.futtta.be/2010/01/22/add-to-any-removed-from-here/) there is no 3rd party tracking code in WP YouTube Lyte, but YouTube off course does see visitor requests coming in (see also the youtube-nocookie.com remark in Bugs/Issues below) for the thumbnails.
 
 = Can I use WP YouTube Lyte for a custom field? =
 Just pass the httpv url of such a field to lyte_preparse like this: 
@@ -106,7 +105,6 @@ You probably added a link (<a href>)around the httpv-url. No link is needed, jus
 = Any bugs/ issues should I know about? =
 * Although the widget is available in (very) small sizes, these do not display that great and might, in the near future, be disabled by YouTube as their Terms of Service state that the smallest available embedded player is 200X200 pixels. Use the deprecated smaller sizes at your own risk.
 * Having the same YouTube-video on one page can cause WP YouTube Lyte to malfunction (as the YouTube id is used as the div's id in the DOM, and DOM id's are supposed to be unique)
-* As youtube-nocookie.com does not serve the HTML5-player, WP YouTube Lyte uses the youtube.com domain (which provides less privacy), but as soon as youtube-nocookie.com serves HTML5-video, this will become the default domain for WP YouTube Lyte again.
 * When using the Firefox plugin Karma Blocker, the [video isn't visible when clicking "play", with a warning message being shown instead](http://blog.futtta.be/?p=7584). This is expected behavior and should be solved by tweaking Karma Blocker's configuration.
 * The translations have not been updated entirely for version 1.2.0 and later. Help with translations is high on my wish-list, [contact me if you are interested to help](http://blog.futtta.be/contact)!
 
