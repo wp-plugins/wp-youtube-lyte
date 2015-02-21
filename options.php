@@ -68,13 +68,13 @@ if (empty($lyte_yt_api_key)) {
 
 function lyte_admin_api_error(){
 	$yt_error=json_decode(get_option('lyte_api_error'),1);
-    echo '<div class="error"><p>';
-    _e('WP YouTube Lyte got the following error back from the YouTube API: ');
+	echo '<div class="error"><p>';
+	_e('WP YouTube Lyte got the following error back from the YouTube API: ');
 	echo "<strong>".$yt_error["reason"]."</strong>";
 	echo " (".date("r",$yt_error["timestamp"]).").";
-    echo '</a>.</p></div>';
-    update_option('lyte_api_error','');
-    }
+	echo '</a>.</p></div>';
+	update_option('lyte_api_error','');
+}
 
 if (get_option('lyte_api_error','')!=='') {
 	add_action('admin_notices', 'lyte_admin_api_error');
@@ -90,15 +90,25 @@ function lyte_settings_page() {
     <?php settings_fields( 'lyte-settings-group' ); ?>
     <table class="form-table">
 	<input type="hidden" name="lyte_notification" value="<?php echo get_option('lyte_notification','0'); ?>" />
+	<?php
+	// only show api key input field if there's no result from filter
+	$filter_key=apply_filters('lyte_filter_yt_api_key','');
+	if (empty($filter_key)) { ?>
 		<tr valign="top">
-		<th scope="row"><?php _e("Please enter your YouTube API key.","wp-youtube-lyte") ?></th>
-		<td>
+			<th scope="row"><?php _e("Please enter your YouTube API key.","wp-youtube-lyte") ?></th>
+			<td>
 				<fieldset>
-						<legend class="screen-reader-text"><span><?php _e("Please enter your YouTube API key.","wp-youtube-lyte") ?></span></legend>
-						<label title="API key"><input type="text" size="40" name="lyte_yt_api_key" value="<?php echo get_option('lyte_yt_api_key',''); ?>"></label><br /><?php _e("WP YouTube Lyte uses YouTube's API to fetch information on each video. For your site to use that API, you will have to <a href=\"https://console.developers.google.com/project/\" target=\"_blank\">register your site</a>, enable the YouTube API, get a server key and fill that key out here. There is more info on this topic <a href=\"https://wordpress.org/plugins/wp-youtube-lyte/faq/\" target=\"_blank\">in the FAQ</a>.","wp-youtube-lyte"); ?>
+					<legend class="screen-reader-text"><span><?php _e("Please enter your YouTube API key.","wp-youtube-lyte") ?></span></legend>
+					<label title="API key"><input type="text" size="40" name="lyte_yt_api_key" value="<?php echo get_option('lyte_yt_api_key',''); ?>"></label><br /><?php _e("WP YouTube Lyte uses YouTube's API to fetch information on each video. For your site to use that API, you will have to <a href=\"https://console.developers.google.com/project/\" target=\"_blank\">register your site</a>, enable the YouTube API, get a server key and fill that key out here. There is more info on this topic <a href=\"https://wordpress.org/plugins/wp-youtube-lyte/faq/\" target=\"_blank\">in the FAQ</a>.","wp-youtube-lyte"); ?>
 				</fieldset>
-		</td>
-        </tr>
+			</td>
+	        </tr>
+	<?php } else { ?>
+		<tr valign="top">
+                	<th scope="row"><?php _e("YouTube API key provided by plugin.","wp-youtube-lyte"); ?></th>
+                	<td><?php _e("Great, your YouTube API key has been taken care of by another plugin.","wp-youtube-lyte"); ?></td>
+		</tr>
+	<?php } ?>
         <tr valign="top">
             <th scope="row">Player size:</th>
             <td>
