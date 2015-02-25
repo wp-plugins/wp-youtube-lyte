@@ -99,7 +99,9 @@ function lyte_settings_page() {
 			<td>
 				<fieldset>
 					<legend class="screen-reader-text"><span><?php _e("Please enter your YouTube API key.","wp-youtube-lyte") ?></span></legend>
-					<label title="API key"><input type="text" size="40" name="lyte_yt_api_key" value="<?php echo get_option('lyte_yt_api_key',''); ?>"></label><br /><?php _e("WP YouTube Lyte uses YouTube's API to fetch information on each video. For your site to use that API, you will have to <a href=\"https://console.developers.google.com/project/\" target=\"_blank\">register your site</a>, enable the YouTube API, get a server key and fill that key out here. There is more info on this topic <a href=\"https://wordpress.org/plugins/wp-youtube-lyte/faq/\" target=\"_blank\">in the FAQ</a>.","wp-youtube-lyte"); ?>
+					<label title="API key"><input type="text" size="28" name="lyte_yt_api_key" id="lyte_yt_api_key" value="<?php echo get_option('lyte_yt_api_key',''); ?>"><span id="check_api_key" class="submit button-secondary" style="margin:0px 5px;"><?php _e("Test Key"); ?></span></label><br />
+					<div id="lyte_key_check_output" style="display:none;margin-bottom:5px;background-color:white;border-left:solid;border-width:4px;border-color:#2ea2cc;padding:5px 5px 5px 15px;"></div>
+					<?php _e("WP YouTube Lyte uses YouTube's API to fetch information on each video. For your site to use that API, you will have to <a href=\"https://console.developers.google.com/project/\" target=\"_blank\">register your site as a new application</a>, enable the YouTube API for it and get a server key and fill it out here.","wp-youtube-lyte"); ?>
 				</fieldset>
 			</td>
 	        </tr>
@@ -221,6 +223,26 @@ function lyte_settings_page() {
 	cookiename="wp-youtube-lyte_feed";
 
         jQuery(document).ready(function() {
+		jQuery( "#check_api_key" ).click(function() {
+			jQuery("#lyte_key_check_output").show();
+			jQuery("#lyte_key_check_output").append('<p><?php _e("Checking your key ..."); ?></p>');
+
+			lyte_yt_api_key=jQuery("input#lyte_yt_api_key").val();			
+			if (lyte_yt_api_key.length>9) {
+				var data = {
+					'action': 'lyte_check_yt_api_key',
+					'lyte_nonce': '<?php echo wp_create_nonce( "lyte_check_api_key" );?>',
+					'lyte_yt_api_key': jQuery("input#lyte_yt_api_key").val()
+				};
+
+				jQuery.post(ajaxurl, data, function(response) {
+					jQuery("#lyte_key_check_output").append('<p>'+response+'</p>');
+				});
+			} else {
+				jQuery("#lyte_key_check_output").append('<p><?php _e("That does not seem to be a correct API key!"); ?></p>');
+			}		
+		})
+
 		jQuery("#feed_dropdown").change(function() { show_feed(jQuery("#feed_dropdown").val()) });
 
 		feedid=jQuery.cookie(cookiename);
@@ -242,4 +264,58 @@ function lyte_settings_page() {
 </script>
 
 </div>
-<?php } ?>
+<?php }
+
+// ajax receiver for YT API key check
+add_action( 'wp_ajax_lyte_check_yt_api_key', 'lyte_check_yt_api_key_callback' );
+function lyte_check_yt_api_key_callback() {
+	check_ajax_referer( "lyte_check_api_key", 'lyte_nonce' );
+	$api_key = strip_tags($_POST['lyte_yt_api_key']);
+
+	// use random video to make sure a cache is not spoiling things
+	$vidToCheck=array("jLOnUWJTCG0","ZmnZHudtzXg","2_7oQcAkyl8","nOvv80wkSgI","pBCt5nfsZ30","KHw7gdJ14uQ","qJ_PMvjmC6M","DVwHCGAr_OE","LtOGa5M8AuU","VHO9uZX9FNU");
+	$randVidIndex=array_rand($vidToCheck);
+	
+	$api_response = lyte_get_YT_resp($vidToCheck[$randVidIndex],false,"",$api_key);
+	
+	if (is_array($api_response)) {
+		if (!empty($api_response["title"])) {
+			_e("API seems OK, you can Save Changes below now.");
+			wp_die();
+		} else if (!empty($api_response["reason"])) {
+			_e("API key not OK, your key seems to ");
+			switch ($api_response["reason"]) {
+				case "keyInvalid":
+					_e("be invalid.");
+					break;
+				case "ipRefererBlocked":
+					_e("be valid but restricted to an IP-address which is not your server's.");
+					_e("Try changing the allowed IP for your API key to include this one: ");
+					echo $_SERVER["SERVER_ADDR"];
+					break;
+				case "keyExpired":
+					_e("have expired, please check in the Google Developer Console.");
+					break;
+				case "limitExceeded":
+				case "quotaExceeded":
+				case "rateLimitExceeded":
+				case "userRateLimitExceeded":
+					_e("be correct, but it seems to have exceeded the number of requests that can be made with it.");
+					break;
+				case "videoNotFound":
+					_e("probably work, but as the video with id ");
+					echo $vidToCheck[$randVidIndex];
+					_e(" was not found we cannot be sure, please try again.");
+					break;
+				default:
+					_e("be faulty, with YouTube API returning reason: ");
+					echo $api_response["reason"];
+				}
+			wp_die();
+		}
+	}
+	_e("Something went wrong, WP YouTube Lyte might not have been able to retrieve information from the YouTube API: ");
+	print_r($api_response);
+	wp_die();
+}
+?>

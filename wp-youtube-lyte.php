@@ -212,6 +212,7 @@ function lyte_parse($the_content,$doExcerpt=false) {
 			}
 
 			// fetch data from YT api (v2 or v3)
+			$isPlaylist=false;
 			if ($plClass===" playlist") {
 				$isPlaylist=true;
 			}
@@ -263,6 +264,7 @@ function lyte_parse($the_content,$doExcerpt=false) {
 						  	}
 						}
 					}
+					$thumbUrl="";
 					if (($thumb==="highres") && (!empty($yt_resp_array["HQthumbUrl"]))){
 						$thumbUrl=$yt_resp_array["HQthumbUrl"];
 					} else {
@@ -276,9 +278,9 @@ function lyte_parse($the_content,$doExcerpt=false) {
 				$thumbUrl = apply_filters( 'lyte_match_thumburl', $thumbUrl );
 		      } else {
 				// no useable result from youtube, fallback on video thumbnail (doesn't work on playlist)
-				$thumbUrl="//i.ytimg.com/vi/".$vid."/hqdefault.jpg";
-			  }
+				$thumbUrl = "//i.ytimg.com/vi/".$vid."/hqdefault.jpg";
 			}
+		}
 		
 			if ($audio===true) {
 				$wrapper="<div class=\"lyte-wrapper-audio\" style=\"width:".$lyteSettings[2]."px;max-width:100%;overflow:hidden;height:38px;".$lyteSettings['pos']."\">";
@@ -355,16 +357,18 @@ function captions_lookup($postID, $cachekey, $vid) {
 	}
 }
 
-function lyte_get_YT_resp($vid,$playlist=false,$cachekey) {
+function lyte_get_YT_resp($vid,$playlist=false,$cachekey,$apiTestKey="") {
 	/** logic to get video info from cache or get it from YouTube and set it */
 	global $postID, $cachekey, $toCache_index;
-	if ( $postID ) {
+	if ( $postID && empty($apiTestKey)) {
         	$cache_resp = get_post_meta( $postID, $cachekey, true );
 		if (!empty($cache_resp)) {
 			$_thisLyte = json_decode(gzuncompress(base64_decode($cache_resp)),1);
 			// make sure there are not old APIv2 full responses in cache
-			if ($_thisLyte['entry']['xmlns$yt']==="http://gdata.youtube.com/schemas/2007") {
-				$_thisLyte = "";
+			if (array_key_exists('entry', $_thisLyte)) {
+				if ($_thisLyte['entry']['xmlns$yt']==="http://gdata.youtube.com/schemas/2007") {
+					$_thisLyte = "";
+				}
 			}
 		}
 	} else {
@@ -376,6 +380,9 @@ function lyte_get_YT_resp($vid,$playlist=false,$cachekey) {
         	// first get yt api key
 	        $lyte_yt_api_key = get_option('lyte_yt_api_key','');
 		$lyte_yt_api_key = apply_filters('lyte_filter_yt_api_key', $lyte_yt_api_key);
+		if (!empty($apiTestKey)) {
+			$lyte_yt_api_key=$apiTestKey;
+		}
 
 		if (empty($lyte_yt_api_key)) {
 			// v2 (if no API key)
@@ -435,7 +442,11 @@ function lyte_get_YT_resp($vid,$playlist=false,$cachekey) {
 						$yt_error['code']=wp_remote_retrieve_response_code($yt_resp);
 						$yt_error['reason']=$yt_resp_array['error']['errors'][0]['reason'];
 						$yt_error['timestamp']=strtotime("now");
-						update_option("lyte_api_error",json_encode($yt_error));
+						if (empty($apiTestKey)) {
+							update_option("lyte_api_error",json_encode($yt_error));
+						} else {
+							return $yt_error;
+						}
 						$_thisLyte = "";
 					} else {
 						if ($playlist) {
@@ -461,7 +472,7 @@ function lyte_get_YT_resp($vid,$playlist=false,$cachekey) {
 				}
 					
 				// try to cache the result
-				if ( ($postID) && (!empty($_thisLyte))) {
+				if ( ($postID) && (!empty($_thisLyte)) && (empty($apiTestKey)) ) {
 					$_thisLyte['lyte_date_added']=time();
 					$yt_resp_precache=json_encode($_thisLyte);
 
