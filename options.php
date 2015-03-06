@@ -53,12 +53,16 @@ function lyte_admin_scripts() {
 }
 
 function lyte_admin_styles() {
-        wp_enqueue_style('zrssfeed', plugins_url('/external/jquery.zrssfeed.css', __FILE__));
+	wp_enqueue_style('zrssfeed', plugins_url('/external/jquery.zrssfeed.css', __FILE__));
 }
 
-function lyte_admin_nag_apikey(){
-    _e('<div class="update-nag">For WP YouTube Lyte to function optimally, you need to enter an YouTube API key <a href="options-general.php?page=lyte_settings_page">in the settings screen</a>.</div>');
-    }
+function lyte_admin_nag_apikey() {
+	echo "<div class=\"update-nag\">";
+	_e('For WP YouTube Lyte to function optimally, you should enter an YouTube API key ');
+	echo "<a href=\"options-general.php?page=lyte_settings_page\">";
+	_e('in the settings screen.');
+	echo "</a>.</div>";
+}
 
 $lyte_yt_api_key=get_option('lyte_yt_api_key','');
 $lyte_yt_api_key=apply_filters('lyte_filter_yt_api_key', $lyte_yt_api_key);
@@ -90,27 +94,23 @@ function lyte_settings_page() {
     <?php settings_fields( 'lyte-settings-group' ); ?>
     <table class="form-table">
 	<input type="hidden" name="lyte_notification" value="<?php echo get_option('lyte_notification','0'); ?>" />
-	<?php
-	// only show api key input field if there's no result from filter
-	$filter_key=apply_filters('lyte_filter_yt_api_key','');
-	if (empty($filter_key)) { ?>
 		<tr valign="top">
-			<th scope="row"><?php _e("Please enter your YouTube API key.","wp-youtube-lyte") ?></th>
+			<th scope="row"><?php _e("Your YouTube API key.","wp-youtube-lyte") ?></th>
 			<td>
+			<?php // only show api key input field if there's no result from filter
+			$filter_key=apply_filters('lyte_filter_yt_api_key','');
+			if (empty($filter_key)) { ?>
 				<fieldset>
 					<legend class="screen-reader-text"><span><?php _e("Please enter your YouTube API key.","wp-youtube-lyte") ?></span></legend>
 					<label title="API key"><input type="text" size="28" name="lyte_yt_api_key" id="lyte_yt_api_key" value="<?php echo get_option('lyte_yt_api_key',''); ?>"><span id="check_api_key" class="submit button-secondary" style="margin:0px 5px;"><?php _e("Test Key"); ?></span></label><br />
 					<div id="lyte_key_check_output" style="display:none;margin-bottom:5px;background-color:white;border-left:solid;border-width:4px;border-color:#2ea2cc;padding:5px 5px 5px 15px;"></div>
 					<?php _e("WP YouTube Lyte uses YouTube's API to fetch information on each video. For your site to use that API, you will have to <a href=\"https://console.developers.google.com/project/\" target=\"_blank\">register your site as a new application</a>, enable the YouTube API for it and get a server key and fill it out here.","wp-youtube-lyte"); ?>
 				</fieldset>
+			<?php } else { ?>
+				<?php _e("Great, your YouTube API key has been taken care of!","wp-youtube-lyte"); ?>
+			<?php } ?>
 			</td>
-	        </tr>
-	<?php } else { ?>
-		<tr valign="top">
-                	<th scope="row"><?php _e("YouTube API key provided by plugin.","wp-youtube-lyte"); ?></th>
-                	<td><?php _e("Great, your YouTube API key has been taken care of by another plugin.","wp-youtube-lyte"); ?></td>
-		</tr>
-	<?php } ?>
+	    </tr>
         <tr valign="top">
             <th scope="row">Player size:</th>
             <td>
@@ -281,7 +281,6 @@ function lyte_check_yt_api_key_callback() {
 	if (is_array($api_response)) {
 		if (!empty($api_response["title"])) {
 			_e("API seems OK, you can Save Changes below now.");
-			wp_die();
 		} else if (!empty($api_response["reason"])) {
 			_e("API key not OK, your key seems to ");
 			switch ($api_response["reason"]) {
@@ -289,7 +288,7 @@ function lyte_check_yt_api_key_callback() {
 					_e("be invalid.");
 					break;
 				case "ipRefererBlocked":
-					_e("be valid but restricted to an IP-address which is not your server's.");
+					_e("be valid, but restricted to an IP-address which is not your server's.");
 					_e("Try changing the allowed IP for your API key to include this one: ");
 					echo $_SERVER["SERVER_ADDR"];
 					break;
@@ -300,7 +299,7 @@ function lyte_check_yt_api_key_callback() {
 				case "quotaExceeded":
 				case "rateLimitExceeded":
 				case "userRateLimitExceeded":
-					_e("be correct, but it seems to have exceeded the number of requests that can be made with it.");
+					_e("be correct, but seems to have exceeded the number of requests that can be made with it.");
 					break;
 				case "videoNotFound":
 					_e("probably work, but as the video with id ");
@@ -311,11 +310,11 @@ function lyte_check_yt_api_key_callback() {
 					_e("be faulty, with YouTube API returning reason: ");
 					echo $api_response["reason"];
 				}
-			wp_die();
 		}
+	} else {
+		_e("Something went wrong, WP YouTube Lyte might not have been able to retrieve information from the YouTube API, got error: ");
+		print_r($api_response);
 	}
-	_e("Something went wrong, WP YouTube Lyte might not have been able to retrieve information from the YouTube API: ");
-	print_r($api_response);
 	wp_die();
 }
 ?>
