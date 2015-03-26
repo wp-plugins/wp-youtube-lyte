@@ -201,6 +201,7 @@ function lyte_settings_page() {
 </form>
 </div>
 <div style="float:right;width:30%" id="lyte_admin_feed">
+	<div style="margin:0px 15px 15px 15px;font-size:larger;"><a href="<?php echo network_admin_url(); ?>plugin-install.php?tab=search&type=author&s=futtta"><?php _e("Happy with WP YouTube Lyte? Try my other plugins!"); ?></a></div>
         <div style="margin-left:10px;margin-top:-5px;">
                 <h3>
                         <?php _e("futtta about","wp-youtube-lyte") ?>
