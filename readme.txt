@@ -48,8 +48,30 @@ An API is a way to have two pieces of software talk to each other to exchange in
 = What is an API key and why does WP YouTube Lyte need one all of a sudden? =
 Up until WP YouTube Lyte 1.5.0 the v2 YouTube API was used, but [in September 2014 Google announced it was going to decommission that version, forcing the switch to v3](http://youtube-eng.blogspot.be/2014/09/have-you-migrated-to-data-api-v3-yet.html?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed:+YouTubeEngDevBlog+%28YouTube+Engineering+and+Developers+Blog%29). A big difference between v2 and v3 is that, whereas v2 allowed "anonymous" requests, this is not the case for v3 any more. This means any request to the YouTube API v3 has to be identified with a key (a string with seamingly random letters & numbers). You can get such a key from Google for free (see below) and you have to enter that in WP YouTube Lyte's settings page.
 
+= OK, now how can get that API key? =
+
+1. Go to "Google Developer Console](https://console.developers.google.com/project/) and log in with your Google account.
+2. Click on 'Create Project' and:
+ * Fill in a Project Name
+ * Fill in a Project ID
+ * Click on 'Create'
+
+3. On the next page (or when there is no next page, click on your Project's name):
+ * Click on 'Enable an API'
+ * Scroll down to YouTube Data API v3 and click on it
+ * Click on 'OFF' at the top to enable the API
+ * Optionally disable other API's
+
+4. In the sidebar on the left:
+ * Click on 'Credentials'
+ * Click on 'Create new Key'
+ * Click on 'Server Key'
+ * Click on 'Create'
+
+5. Copy your API key to WP YouTube Lyte settings page.
+
 = What will happen if I don't provide an API key? =
-For as long as Google keeps the v2 API accessible (at least until April 20, 2015), everything will work just fine as WP YouTube Lyte will fall back to that version if no API key was provided. When Google does close access to the v2 API, WP YouTube Lyte will work, rendering Lyte players, but without title and description. For individual videos a thumbnail will always be shown, but not for playlists.
+For as long as Google keeps the v2 API accessible (at least until April 20, 2015), everything will work just fine as WP YouTube Lyte will fall back to that version if no API key was provided. When Google does close access to the v2 API, WP YouTube Lyte will continue to work, rendering Lyte players, but without title and description. For individual videos a thumbnail will always be shown, but not for playlists.
 
 = What does "html5 video support" mean? =
 When playing, HTML5 video will not be visible for everyone (see requirements). Indeed some visitors will see the fallback Flash video instead.
