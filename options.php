@@ -229,7 +229,7 @@ function lyte_settings_page() {
 			jQuery("#lyte_key_check_output").append('<p><?php _e("Checking your key ..."); ?></p>');
 
 			lyte_yt_api_key=jQuery("input#lyte_yt_api_key").val();			
-			if (lyte_yt_api_key.length>9) {
+			if ((lyte_yt_api_key.length>9) &&(lyte_yt_api_key.length<99)) {
 				var data = {
 					'action': 'lyte_check_yt_api_key',
 					'lyte_nonce': '<?php echo wp_create_nonce( "lyte_check_api_key" );?>',
