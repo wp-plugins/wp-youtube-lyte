@@ -50,7 +50,7 @@ Up until WP YouTube Lyte 1.5.0 the v2 YouTube API was used, but [in September 20
 
 = OK, now how can get that API key? =
 
-1. Go to "Google Developer Console](https://console.developers.google.com/project/) and log in with your Google account.
+1. Go to [Google Developer Console](https://console.developers.google.com/project/) and log in with your Google account.
 2. Click on 'Create Project' and:
  * Fill in a Project Name
  * Fill in a Project ID
@@ -66,6 +66,7 @@ Up until WP YouTube Lyte 1.5.0 the v2 YouTube API was used, but [in September 20
  * Click on 'Credentials'
  * Click on 'Create new Key'
  * Click on 'Server Key'
+ * Leave the box with whitelisted IP's empty
  * Click on 'Create'
 
 5. Copy your API key to WP YouTube Lyte settings page.
@@ -122,7 +123,7 @@ Copy it to /wp-content/plugins/lyte_helper.php and activate it in WordPress' plu
 All in One SEO Pack be default generates a description which still has httpv-links in it. To remove those, you'll have to use (example code in) lyte_helper.php (see above) and add lyte_filter_aioseop_description to the aioseop-filter in there.
 
 = When I click on a LYTE video, a link to YouTube opens, what's up with that? =
-You probably added a link (<a href>)around the httpv-url. No link is needed, just the httpv-url.
+You probably added a link around the httpv-url. No link is needed, just the httpv-url.
 
 = Any bugs/ issues should I know about? =
 * Although the widget is available in (very) small sizes, these do not display that great and might, in the near future, be disabled by YouTube as their Terms of Service state that the smallest available embedded player is 200X200 pixels. Use the deprecated smaller sizes at your own risk.
