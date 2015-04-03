@@ -70,8 +70,8 @@ Up until WP YouTube Lyte 1.5.0 the v2 YouTube API was used, but [in September 20
 
 5. Copy your API key to WP YouTube Lyte settings page.
 
-= What will happen if I don't provide an API key? =
-For as long as Google keeps the v2 API accessible (at least until April 20, 2015), everything will work just fine as WP YouTube Lyte will fall back to that version if no API key was provided. When Google does close access to the v2 API, WP YouTube Lyte will continue to work, rendering Lyte players, but without title and description. For individual videos a thumbnail will always be shown, but not for playlists.
+= Will WP YouTube Lyte work if I don't provide an API key? =
+Yes, with some exceptions. For as long as Google keeps the v2 API accessible (at least until April 20, 2015), everything will work just fine as WP YouTube Lyte will fall back to that version if no API key was provided. When Google does close access to the v2 API, WP YouTube Lyte will continue to work, rendering Lyte players, but without the title and microdata (description, time, ...) and without thumbnails for playlists.
 
 = What does "html5 video support" mean? =
 When playing, HTML5 video will not be visible for everyone (see requirements). Indeed some visitors will see the fallback Flash video instead.
