@@ -4,7 +4,7 @@ Tags: youtube, video, lyte, lite youtube embeds, html5 video, widget, youtube au
 Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 2.9
 Tested up to: 4.1
-Stable tag: 1.6.0
+Stable tag: 1.6.1
 
 High performance YouTube video, playlist and audio-only embeds which don't slow down your blog and offer optimal accessibility.
 
@@ -139,6 +139,9 @@ Just tell me, I like the feedback! Use the [Contact-page on my blog](http://blog
 * [Rate my plugin on wordpress.org](http://wordpress.org/extend/plugins/wp-youtube-lyte/)
 
 == Changelog ==
+
+= 1.6.1 =
+* fix for WP YouTube Lyte widgets not loading
 
 = 1.6.0 =
 * New: support for YouTube API v3, requiring a server API key to be provided (due to [YouTube closing down the anonymous v2 API](http://blog.futtta.be/2015/01/27/wp-youtube-lyte-and-youtube-api-v2-end-of-life/))
