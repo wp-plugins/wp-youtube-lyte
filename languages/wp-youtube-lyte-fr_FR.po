@@ -5,15 +5,15 @@ msgstr ""
 "Project-Id-Version: WP YouTube Lyte 1.4.2\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/wp-youtube-lyte\n"
 "POT-Creation-Date: 2015-03-06 17:49:26+00:00\n"
-"PO-Revision-Date: 2015-03-27 16:49+0100\n"
-"Last-Translator: frank goossens (futtta) <futtta@gmail.com>\n"
+"PO-Revision-Date: 2015-04-14 13:59+0100\n"
+"Last-Translator: Serge Bibauw <sbibauw@gmail.com>\n"
 "Language-Team: Serge Bibauw <sbibauw@gmail.com>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.7.5\n"
 
 #: options.php:21
 msgid "Your WP YouTube Lyte cache has been succesfully cleared."
@@ -26,10 +26,10 @@ msgstr ""
 
 #: options.php:61
 msgid ""
-"For WP YouTube Lyte to function optimally, you should enter an YouTube API "
-"key "
+"For WP YouTube Lyte to function optimally, you should enter an YouTube API key "
 msgstr ""
-"Pour que WP YouTube Lyte fonctionne, vous devez entrer une YouTube API key"
+"Pour que WP YouTube Lyte fonctionne de manière optimale, vous devez entrer une "
+"clé API YouTube"
 
 #: options.php:63
 msgid "in the settings screen."
@@ -37,7 +37,7 @@ msgstr "dans l'écran de configuration."
 
 #: options.php:76
 msgid "WP YouTube Lyte got the following error back from the YouTube API: "
-msgstr "WP YouTube Lyte a reçu cette erreur du API YouTube:"
+msgstr "WP YouTube Lyte a reçu cette erreur de l'API YouTube:"
 
 #: options.php:91
 msgid "WP YouTube Lyte Settings"
@@ -45,37 +45,37 @@ msgstr "Paramètres de WP YouTube Lyte"
 
 #: options.php:98
 msgid "Your YouTube API key."
-msgstr "Votre YouTube API key."
+msgstr "Votre clé API YouTube."
 
 #: options.php:104
 msgid "Please enter your YouTube API key."
-msgstr "Veuillez entrer votre YouTube API key."
+msgstr "Veuillez entrer votre clé API YouTube."
 
 #: options.php:105
 msgid "API key"
-msgstr "API key"
+msgstr "clé API"
 
 #: options.php:105
 msgid "Test Key"
-msgstr "Testez l'API key."
+msgstr "Tester la clé API."
 
 #: options.php:107
 msgid ""
 "WP YouTube Lyte uses YouTube's API to fetch information on each video. For "
 "your site to use that API, you will have to <a href=\"https://console."
-"developers.google.com/project/\" target=\"_blank\">register your site as a "
-"new application</a>, enable the YouTube API for it and get a server key and "
-"fill it out here."
+"developers.google.com/project/\" target=\"_blank\">register your site as a new "
+"application</a>, enable the YouTube API for it and get a server key and fill "
+"it out here."
 msgstr ""
 "WP YouTube Lyte utilise l'API YouTube pour chercher de l'information sur "
-"chaque vidéo. Pour que votre site puisse utiliser ce API, vous devez  <a "
+"chaque vidéo. Pour que votre site puisse utiliser cette API, vous devez <a "
 "href=\"https://console.developers.google.com/project/\" target=\"_blank"
 "\">enregistrer votre site comme nouvelle application</a>, activer l'API "
-"YouTube pour, générer une API key et remplir celle-la ici."
+"YouTube, générer une clé API et la remplir ici."
 
 #: options.php:110
 msgid "Great, your YouTube API key has been taken care of!"
-msgstr "Superbe, votre API key YouTube est déjà OK."
+msgstr "Fantastique : votre clé API YouTube est prise en compte."
 
 #: options.php:115 options.php:117
 msgid "Player size"
@@ -87,27 +87,27 @@ msgstr "Ajouter des liens sous les vidéos incrustées ?"
 
 #: options.php:139
 msgid "Show links?"
-msgstr "Afficher des liens ?"
+msgstr "Afficher les liens ?"
 
 #: options.php:140
 msgid "Show YouTube-link"
-msgstr " Ajouter un lien YouTube."
+msgstr "Afficher le lien YouTube."
 
 #: options.php:140
 msgid " Add YouTube-link."
-msgstr " Ajouter un lien YouTube."
+msgstr " Ajouter le lien YouTube."
 
 #: options.php:141
 msgid "Show YouTube and Ease YouTube link"
-msgstr "Montrez les liens YouTube et Easy YouTube"
+msgstr "Afficher les liens YouTube et Easy YouTube"
 
 #: options.php:141
 msgid ""
 " Add both a YouTube and an <a href=\"http://icant.co.uk/easy-youtube/docs/"
 "index.html\" target=\"_blank\">Easy YouTube</a>-link."
 msgstr ""
-" Ajouter un lien YouTube et un lien <a href=\"http://icant.co.uk/easy-"
-"youtube/docs/index.html\" target=\"_blank\">Easy YouTube</a>."
+" Ajouter un lien YouTube et un lien <a href=\"http://icant.co.uk/easy-youtube/"
+"docs/index.html\" target=\"_blank\">Easy YouTube</a>."
 
 #: options.php:142
 msgid "Don't include links."
@@ -123,7 +123,7 @@ msgstr "Position du lecteur :"
 
 #: options.php:150
 msgid "Left, center or right?"
-msgstr "Gauche, centré ou droite ?"
+msgstr "À gauche, centré ou à droite ?"
 
 #: options.php:151
 msgid "Left"
@@ -143,7 +143,7 @@ msgstr "HD ou pas ?"
 
 #: options.php:161
 msgid "Enable HD?"
-msgstr "Activer la HD"
+msgstr "Activer la HD ?"
 
 #: options.php:161
 msgid "Enable HD"
@@ -159,7 +159,7 @@ msgstr "Pas de HD (par défaut)"
 
 #: options.php:167
 msgid "Add microdata?"
-msgstr "Ajouter des micro-ondes ?"
+msgstr "Ajouter des micro-données ?"
 
 #: options.php:170
 msgid "Add video microdata to the HTML?"
@@ -167,7 +167,7 @@ msgstr "Ajouter des micro-données au code HTML ? "
 
 #: options.php:171
 msgid "Sure, add microdata!"
-msgstr "Ajouter des micro-ondes ?"
+msgstr "Oui, ajouter des micro-données !"
 
 #: options.php:171 options.php:181
 msgid "Yes (default)"
@@ -175,7 +175,7 @@ msgstr "Oui (par défaut)"
 
 #: options.php:172
 msgid "No microdata in my HTML please."
-msgstr "Non, pas de micro-données."
+msgstr "Non, pas de micro-données dans mon HTML."
 
 #: options.php:172
 msgid "No microdata, thanks."
@@ -187,11 +187,11 @@ msgstr "Agir aussi sur les liens YouTube normaux ?"
 
 #: options.php:181
 msgid "That would be great!"
-msgstr "Ce serait magnifique!"
+msgstr "Ce serait magnifique !"
 
 #: options.php:182
 msgid "No, I'll stick to httpv or shortcodes."
-msgstr "Non, je préfère les liens httpv ou les \"shortcodes\""
+msgstr "Non, je préfère les liens httpv ou les \"shortcodes\"."
 
 #: options.php:182
 msgid "No thanks."
@@ -209,7 +209,6 @@ msgstr "Enregistrer les modifications"
 msgid "futtta about"
 msgstr "À propos de futtta"
 
-#. #-#-#-#-#  plugin.pot (WP YouTube Lyte 1.5.0)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: options.php:208
 msgid "WP YouTube Lyte"
@@ -221,7 +220,7 @@ msgstr "WordPress"
 
 #: options.php:210
 msgid "Web Technology"
-msgstr "Technologie Web"
+msgstr "Technologie web"
 
 #: options.php:214
 msgid "Do not donate for this plugin!"
@@ -229,19 +228,19 @@ msgstr "Ne pas donner pour ce plugin !"
 
 #: options.php:228
 msgid "Checking your key ..."
-msgstr "En train de vérifier votre API key."
+msgstr "Vérification de votre clé..."
 
 #: options.php:242
 msgid "That does not seem to be a correct API key!"
-msgstr "Cela ne semble pas être une API key correcte!"
+msgstr "Ça ne semble pas être une clé API correcte !"
 
 #: options.php:283
 msgid "API seems OK, you can Save Changes below now."
-msgstr "API key semble être OK, vous pouvez sauvegarder en bas du page."
+msgstr "La clé API semble OK, vous pouvez enregistrer ci-dessous."
 
 #: options.php:285
 msgid "API key not OK, your key seems to "
-msgstr "API key n'est pas OK, mais semble"
+msgstr "La clé API n'est pas en ordre : elle semble"
 
 #: options.php:288
 msgid "be invalid."
@@ -249,42 +248,43 @@ msgstr "être invalide."
 
 #: options.php:291
 msgid "be valid, but restricted to an IP-address which is not your server's."
-msgstr "être valide, mais n'est pas activé pour l'adresse IP de votre serveur."
+msgstr "être valide, mais n'est pas activée pour l'adresse IP de votre serveur."
 
 #: options.php:292
 msgid "Try changing the allowed IP for your API key to include this one: "
-msgstr "Essaie de changer l'adresse IP pour votre API key."
+msgstr ""
+"Essayer de changer les adresses IP autorisées pour votre clé API, en ajoutant "
+"celle-ci :"
 
 #: options.php:296
 msgid "have expired, please check in the Google Developer Console."
-msgstr "être plus valide, veuillez vérifier dans le Google Developer Console."
+msgstr "avoir expiré ; veuillez vérifier dans la Console Google Developer."
 
 #: options.php:302
 msgid ""
-"be correct, but seems to have exceeded the number of requests that can be "
-"made with it."
-msgstr ""
-"être correcte, mais as surpassé la limite de nombre de requêtes permis."
+"be correct, but seems to have exceeded the number of requests that can be made "
+"with it."
+msgstr "être correcte, mais a dépassé la limite du nombre de requêtes permises."
 
 #: options.php:305
 msgid "probably work, but as the video with id "
-msgstr "fonctionnera probablement, mais la vidéo avec ID "
+msgstr "fonctionne probablement, mais la vidéo avec l'ID "
 
 #: options.php:307
 msgid " was not found we cannot be sure, please try again."
-msgstr "n'a pas été retrouvé, veuillez essayer de nouveau."
+msgstr "n'a pas été trouvée. Veuillez essayer à nouveau."
 
 #: options.php:310
 msgid "be faulty, with YouTube API returning reason: "
-msgstr "être invalide, avec ce réponse du API YouTube:"
+msgstr "être invalide. L'API YouTube renvoie le message suivant :"
 
 #: options.php:315
 msgid ""
 "Something went wrong, WP YouTube Lyte might not have been able to retrieve "
 "information from the YouTube API, got error: "
 msgstr ""
-"Il y avait une problème, WP YouTube Lyte n'a probablement pas pu retrouver "
-"de l'information de l'API YouTube avec l'erreur suivant:"
+"Il y a eu un problème. WP YouTube Lyte n'a probablement pas pu retrouver "
+"l'information de l'API YouTube avec l'erreur suivante :"
 
 #: player_sizes.inc.php:11
 msgid "Mini 16:9 player"
@@ -300,8 +300,7 @@ msgstr "Petit lecteur 16:9"
 
 #: player_sizes.inc.php:29
 msgid "Standard value, YouTube default for 4:3-ratio video"
-msgstr ""
-"Valeur standard, configuration par défaut de YouTube pour les vidéos 4:3"
+msgstr "Valeur standard, configuration par défaut de YouTube pour les vidéos 4:3"
 
 #: player_sizes.inc.php:35
 msgid "YouTube default for 16:9-ratio video"
@@ -407,41 +406,41 @@ msgstr "http://blog.futtta.be/"
 #~ "depending on the settings below."
 #~ msgstr ""
 #~ "WP YouTube Lyte insère des \"Incrustations Lite YouTube© dans votre blog. "
-#~ "Ceux-ci ont l'apparence d'incrustrations (<em>embed</em>) YouTube "
-#~ "normales, mais ne lancent Flash qu'une fois cliquées, ce qui permet de <a "
-#~ "href=\"http://blog.futtta.be/2012/04/03/speed-matters-re-evaluating-wp-"
-#~ "youtube-lytes-performance/\" target=\"_blank\">réduire le volume de "
-#~ "téléchargement et le temps de chargement de manière importante</a>. Quand "
-#~ "une vidéo est jouée, WP-YouTube-Lyte peut soit activer le <a href="
-#~ "\"http://apiblog.youtube.com/2010/07/new-way-to-embed-youtube-videos.html"
-#~ "\" target=\"_blank\">lecteur intégré HTML5 de YouTube</a> ou l'ancienne "
-#~ "version Flash, en fonction des paramètres ci-dessous."
+#~ "Ceux-ci ont l'apparence d'incrustrations (<em>embed</em>) YouTube normales, "
+#~ "mais ne lancent Flash qu'une fois cliquées, ce qui permet de <a href="
+#~ "\"http://blog.futtta.be/2012/04/03/speed-matters-re-evaluating-wp-youtube-"
+#~ "lytes-performance/\" target=\"_blank\">réduire le volume de téléchargement "
+#~ "et le temps de chargement de manière importante</a>. Quand une vidéo est "
+#~ "jouée, WP-YouTube-Lyte peut soit activer le <a href=\"http://apiblog."
+#~ "youtube.com/2010/07/new-way-to-embed-youtube-videos.html\" target=\"_blank"
+#~ "\">lecteur intégré HTML5 de YouTube</a> ou l'ancienne version Flash, en "
+#~ "fonction des paramètres ci-dessous."
 
 #~ msgid ""
-#~ "You can place video and audio in your posts and pages by adding one or "
-#~ "more http<strong>v</strong> or http<strong>a</strong> YouTube-links to "
-#~ "your post. These will automatically be replaced by WP YouTube Lyte with "
-#~ "the correct (flash-less) code. To add a video for example, you type a URL "
-#~ "like <em>http<strong>v</strong>://www.youtube.com/watch?v=QQPSMRQnNlU</"
-#~ "em> or <em>http<strong>v</strong>://www.youtube.com/playlist?"
+#~ "You can place video and audio in your posts and pages by adding one or more "
+#~ "http<strong>v</strong> or http<strong>a</strong> YouTube-links to your "
+#~ "post. These will automatically be replaced by WP YouTube Lyte with the "
+#~ "correct (flash-less) code. To add a video for example, you type a URL like "
+#~ "<em>http<strong>v</strong>://www.youtube.com/watch?v=QQPSMRQnNlU</em> or "
+#~ "<em>http<strong>v</strong>://www.youtube.com/playlist?"
 #~ "list=PLA486E741B25F8E00</em> for a playlist. If you want an audio-only "
 #~ "player, you enter <em>http<strong>a</strong>://www.youtube.com/watch?"
-#~ "v=BIQIGR-kWtc</em>. There's more info on the <a href=\"http://wordpress."
-#~ "org/extend/plugins/wp-youtube-lyte/faq/\" target=\"_blank\">wordpress.org "
-#~ "WP YouTube Lyte FAQ page</a>."
+#~ "v=BIQIGR-kWtc</em>. There's more info on the <a href=\"http://wordpress.org/"
+#~ "extend/plugins/wp-youtube-lyte/faq/\" target=\"_blank\">wordpress.org WP "
+#~ "YouTube Lyte FAQ page</a>."
 #~ msgstr ""
-#~ "Vous pouvez placer de la vidéo et de l'audio dans vos messages et pages "
-#~ "en ajoutant un ou plusieurs liens YouTube http<strong>v</strong> ou "
-#~ "http<strong>a</strong> à votre texte. Ils seront automatiquement "
-#~ "remplacés par WP YouTube Lyte avec le code correct (sans Flash). Pour "
-#~ "ajouter une vidéo par exemple, écrivez une URL comme <em>http<strong>v</"
-#~ "strong>://www.youtube.com/watch?v=QQPSMRQnNlU</em> ou <em>http<strong>v</"
-#~ "strong>://www.youtube.com/playlist?list=PLA486E741B25F8E00</em> pour une "
-#~ "liste de lecture. Si vous voulez un lecteur audio uniquement, écrivez  "
-#~ "<em>http<strong>a</strong>://www.youtube.com/watch?v=BIQIGR-kWtc</em>. "
-#~ "Vous trouverez plus d'informations sur la <a href=\"http://wordpress.org/"
-#~ "extend/plugins/wp-youtube-lyte/faq/\" target=\"_blank\">FAQ wordpress.org "
-#~ "de WP YouTube Lyte</a>."
+#~ "Vous pouvez placer de la vidéo et de l'audio dans vos messages et pages en "
+#~ "ajoutant un ou plusieurs liens YouTube http<strong>v</strong> ou "
+#~ "http<strong>a</strong> à votre texte. Ils seront automatiquement remplacés "
+#~ "par WP YouTube Lyte avec le code correct (sans Flash). Pour ajouter une "
+#~ "vidéo par exemple, écrivez une URL comme <em>http<strong>v</strong>://www."
+#~ "youtube.com/watch?v=QQPSMRQnNlU</em> ou <em>http<strong>v</strong>://www."
+#~ "youtube.com/playlist?list=PLA486E741B25F8E00</em> pour une liste de "
+#~ "lecture. Si vous voulez un lecteur audio uniquement, écrivez  "
+#~ "<em>http<strong>a</strong>://www.youtube.com/watch?v=BIQIGR-kWtc</em>. Vous "
+#~ "trouverez plus d'informations sur la <a href=\"http://wordpress.org/extend/"
+#~ "plugins/wp-youtube-lyte/faq/\" target=\"_blank\">FAQ wordpress.org de WP "
+#~ "YouTube Lyte</a>."
 
 #~ msgid ""
 #~ "You can modify WP-YouTube-Lyte's behaviour by changing the following "

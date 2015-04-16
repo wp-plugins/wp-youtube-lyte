@@ -91,6 +91,7 @@ function lyte_parse($the_content,$doExcerpt=false) {
 	$the_content = apply_filters( 'lyte_content_preparse',$the_content );
 
 	if (get_option('lyte_greedy','1')==="1"){
+		$the_content=preg_replace('/^https?:\/\/(www.)?youtu(be.com|.be)\/playlist\?list=/m','httpv://www.youtube.com/playlist?list=',$the_content);
 		$the_content=preg_replace('/^https?:\/\/(www.)?youtu(be.com|.be)\/(watch\?v=)?/m','httpv://www.youtube.com/watch?v=',$the_content);
 	}
 
@@ -220,7 +221,7 @@ function lyte_parse($the_content,$doExcerpt=false) {
 			$yt_resp_array=lyte_get_YT_resp($vid,$isPlaylist,$cachekey);
 
             // If there was a result from youtube or from cache, use it
-            if ( $yt_resp_array ) {				
+            if ( $yt_resp_array ) {
 				if (is_array($yt_resp_array)) {
 					if ($isPlaylist!==true) {
 						// captions, thanks to Benetech
@@ -276,10 +277,13 @@ function lyte_parse($the_content,$doExcerpt=false) {
 					}
 				/** API: filter hook to override thumbnail URL */
 				$thumbUrl = apply_filters( 'lyte_match_thumburl', $thumbUrl );
-		      } else {
+			} else {
 				// no useable result from youtube, fallback on video thumbnail (doesn't work on playlist)
 				$thumbUrl = "//i.ytimg.com/vi/".$vid."/hqdefault.jpg";
 			}
+		} else {
+			// same fallback
+			$thumbUrl = "//i.ytimg.com/vi/".$vid."/hqdefault.jpg";
 		}
 		
 			if ($audio===true) {
@@ -382,6 +386,23 @@ function lyte_get_YT_resp($vid,$playlist=false,$cachekey,$apiTestKey="") {
 		$lyte_yt_api_key = apply_filters('lyte_filter_yt_api_key', $lyte_yt_api_key);
 		if (!empty($apiTestKey)) {
 			$lyte_yt_api_key=$apiTestKey;
+		}
+
+		if ($lyte_yt_api_key==="none") {
+			$_thisLyte['title']="this is not a title";
+			if ($playlist) {
+				$_thisLyte['thumbUrl']="";
+				$_thisLyte['HQthumbUrl']="";
+			} else {
+				$_thisLyte['thumbUrl']="http://i.ytimg.com/vi/".$vid."/hqdefault.jpg";
+                        	$_thisLyte['HQthumbUrl']="http://i.ytimg.com/vi/".$vid."/maxresdefault.jpg";
+			}
+                        $_thisLyte['dateField']="";
+                        $_thisLyte['duration']="";
+                        $_thisLyte['description']="";
+                        $_thisLyte['captions_data']="false";
+                        $_thisLyte['captions_timestamp'] = "";
+			return $_thisLyte;
 		}
 
 		if (empty($lyte_yt_api_key)) {

@@ -72,7 +72,10 @@ Up until WP YouTube Lyte 1.5.0 the v2 YouTube API was used, but [in September 20
 5. Copy your API key to WP YouTube Lyte settings page.
 
 = Will WP YouTube Lyte work if I don't provide an API key? =
-Yes, with some exceptions. For as long as Google keeps the v2 API accessible (at least until April 20, 2015), everything will work just fine as WP YouTube Lyte will fall back to that version if no API key was provided. When Google does close access to the v2 API, WP YouTube Lyte will continue to work, rendering Lyte players, but without the title and microdata (description, time, ...) and without thumbnails for playlists.
+Yes, with some exceptions. For as long as Google keeps the v2 API accessible (at least until April 20, 2015), everything will work just fine as WP YouTube Lyte will fall back to that version if no API key was provided. When Google does close access to the v2 API, WP YouTube Lyte will continue to work, rendering Lyte players, but without the title and microdata (description, time, ...) and without thumbnails for playlists. If you don't want WP YouTube Lyte to try to access neither v2 or v3 API, you can enter "none" as API key.
+
+= I don't want no API-key but don't want that notice in wp-admin =
+Enter "none" as API-key and WP YouTube Lyte will stop nagging you.
 
 = What does "html5 video support" mean? =
 When playing, HTML5 video will not be visible for everyone (see requirements). Indeed some visitors will see the fallback Flash video instead.
@@ -140,6 +143,11 @@ Just tell me, I like the feedback! Use the [Contact-page on my blog](http://blog
 * [Rate my plugin on wordpress.org](http://wordpress.org/extend/plugins/wp-youtube-lyte/)
 
 == Changelog ==
+
+= 1.6.2 =
+* Improvement: you can now enter "none" as API key, upon which the nagging notice in wp-admin will disappear and WP YouTube Lyte will not try to access any API as [requested by TheGiantRedFox1986](https://wordpress.org/support/topic/remove-notice-in-backend?replies=4)
+* Improvement: automatic recognition of playlist URL's as [proposed by markothaler](https://wordpress.org/support/topic/playlist-recognition-possible?replies=7)
+* Updated French translations, merci Serge!
 
 = 1.6.1 =
 * fix for WP YouTube Lyte widgets not loading
