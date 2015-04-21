@@ -389,7 +389,7 @@ function lyte_get_YT_resp($vid,$playlist=false,$cachekey,$apiTestKey="") {
 		}
 
 		if ($lyte_yt_api_key==="none") {
-			$_thisLyte['title']="this is not a title";
+			$_thisLyte['title']="";
 			if ($playlist) {
 				$_thisLyte['thumbUrl']="";
 				$_thisLyte['HQthumbUrl']="";
