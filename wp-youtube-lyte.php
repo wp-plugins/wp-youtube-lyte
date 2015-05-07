@@ -388,7 +388,7 @@ function lyte_get_YT_resp($vid,$playlist=false,$cachekey,$apiTestKey="") {
 			$lyte_yt_api_key=$apiTestKey;
 		}
 
-		if ($lyte_yt_api_key==="none") {
+		if (($lyte_yt_api_key==="none") || (empty($lyte_yt_api_key))) {
 			$_thisLyte['title']="";
 			if ($playlist) {
 				$_thisLyte['thumbUrl']="";
@@ -401,21 +401,10 @@ function lyte_get_YT_resp($vid,$playlist=false,$cachekey,$apiTestKey="") {
                         $_thisLyte['duration']="";
                         $_thisLyte['description']="";
                         $_thisLyte['captions_data']="false";
-                        $_thisLyte['captions_timestamp'] = "";
+                        $_thisLyte['captions_timestamp']=strtotime("now");
 			return $_thisLyte;
-		}
-
-		if (empty($lyte_yt_api_key)) {
-			// v2 (if no API key)
-			$yt_api_base = "http://gdata.youtube.com/feeds/api/";
-						
-			if ($playlist) {
-				$yt_api_target = "playlists/".$vid."?v=2&alt=json&fields=id,title,author,updated,media:group(media:thumbnail)";
-			} else {
-				$yt_api_target = "videos/".$vid."?v=2&alt=json&fields=id,title,published,content,media:group(media:description,yt:duration,yt:aspectRatio),author(name)";
-			}
 		} else {
-			// v3
+			// v3, feeling somewhat lonely now v2 has gently been put to sleep
 			$yt_api_base = "https://www.googleapis.com/youtube/v3/";
 			
 			if ($playlist) {
@@ -432,63 +421,39 @@ function lyte_get_YT_resp($vid,$playlist=false,$cachekey,$apiTestKey="") {
 		if (is_wp_error($yt_resp)) {
 			$_thisLyte = "";
 		} else {
-			$yt_resp_array=json_decode(wp_remote_retrieve_body($yt_resp),true);
-													
+			$yt_resp_array=json_decode(wp_remote_retrieve_body($yt_resp),true);							
 			if(is_array($yt_resp_array)) {
 				// extract relevant data
-				if (empty($lyte_yt_api_key)) {
-					// v2
-					if ($playlist) {
-						$_thisLyte['title']="Playlist: ".esc_attr(sanitize_text_field(@$yt_resp_array['feed']['title']['$t']));
-						$_thisLyte['thumbUrl']=esc_url(@$yt_resp_array['feed']['media$group']['media$thumbnail'][2]['url']);
-						$_thisLyte['HQthumbUrl']="";
-						$_thisLyte['dateField']=sanitize_text_field(@$yt_resp_array['feed']['updated']['$t']);
-						$_thisLyte['duration']="";
-						$_thisLyte['description']=$yt_title;
-						$_thisLyte['captions_data']="false";
-						$_thisLyte['captions_timestamp'] = "";
+				// v3
+				if (in_array(wp_remote_retrieve_response_code($yt_resp),array(400,403,404))) {
+					$yt_error['code']=wp_remote_retrieve_response_code($yt_resp);
+					$yt_error['reason']=$yt_resp_array['error']['errors'][0]['reason'];
+					$yt_error['timestamp']=strtotime("now");
+					if (empty($apiTestKey)) {
+						update_option("lyte_api_error",json_encode($yt_error));
 					} else {
-						$_thisLyte['title']=esc_attr(sanitize_text_field(@$yt_resp_array['entry']['title']['$t']));
-						$_thisLyte['thumbUrl']="//i.ytimg.com/vi/".$vid."/hqdefault.jpg";
-						$_thisLyte['HQthumbUrl']="//i.ytimg.com/vi/".$vid."/maxresdefault.jpg";
-						$_thisLyte['dateField']=sanitize_text_field(@$yt_resp_array['entry']['published']['$t']);
-						$_thisLyte['duration']="T".sanitize_text_field(@$yt_resp_array['entry']['media$group']['yt$duration']['seconds'])."S";
-						$_thisLyte['description']=esc_attr(sanitize_text_field(@$yt_resp_array['entry']['media$group']['media$description']['$t']));
-						$_thisLyte['captions_data']="false";
-						$_thisLyte['captions_timestamp'] = "";
+						return $yt_error;
 					}
+					$_thisLyte = "";
 				} else {
-					// v3
-					if (in_array(wp_remote_retrieve_response_code($yt_resp),array(400,403,404))) {
-						$yt_error['code']=wp_remote_retrieve_response_code($yt_resp);
-						$yt_error['reason']=$yt_resp_array['error']['errors'][0]['reason'];
-						$yt_error['timestamp']=strtotime("now");
-						if (empty($apiTestKey)) {
-							update_option("lyte_api_error",json_encode($yt_error));
-						} else {
-							return $yt_error;
-						}
-						$_thisLyte = "";
+					if ($playlist) {
+						$_thisLyte['title']="Playlist: ".esc_attr(sanitize_text_field(@$yt_resp_array['items'][0]['snippet']['title']));
+						$_thisLyte['thumbUrl']=esc_url(@$yt_resp_array['items'][0]['snippet']['thumbnails']['high']['url']);
+						$_thisLyte['HQthumbUrl']=esc_url(@$yt_resp_array['items'][0]['snippet']['thumbnails']['maxres']['url']);
+						$_thisLyte['dateField']=sanitize_text_field(@$yt_resp_array['items'][0]['snippet']['publishedAt']);
+						$_thisLyte['duration']="";
+						$_thisLyte['description']=esc_attr(sanitize_text_field(@$yt_resp_array['items'][0]['snippet']['description']));
+						$_thisLyte['captions_data']="false";
+						$_thisLyte['captions_timestamp'] = "";
 					} else {
-						if ($playlist) {
-							$_thisLyte['title']="Playlist: ".esc_attr(sanitize_text_field(@$yt_resp_array['items'][0]['snippet']['title']));
-							$_thisLyte['thumbUrl']=esc_url(@$yt_resp_array['items'][0]['snippet']['thumbnails']['high']['url']);
-							$_thisLyte['HQthumbUrl']=esc_url(@$yt_resp_array['items'][0]['snippet']['thumbnails']['maxres']['url']);
-							$_thisLyte['dateField']=sanitize_text_field(@$yt_resp_array['items'][0]['snippet']['publishedAt']);
-							$_thisLyte['duration']="";
-							$_thisLyte['description']=esc_attr(sanitize_text_field(@$yt_resp_array['items'][0]['snippet']['description']));
-							$_thisLyte['captions_data']="false";
-							$_thisLyte['captions_timestamp'] = "";
-						} else {
-							$_thisLyte['title']=esc_attr(sanitize_text_field(@$yt_resp_array['items'][0]['snippet']['title']));
-							$_thisLyte['thumbUrl']=esc_url(@$yt_resp_array['items'][0]['snippet']['thumbnails']['high']['url']);
-							$_thisLyte['HQthumbUrl']=esc_url(@$yt_resp_array['items'][0]['snippet']['thumbnails']['maxres']['url']);
-							$_thisLyte['dateField']=sanitize_text_field(@$yt_resp_array['items'][0]['snippet']['publishedAt']);
-							$_thisLyte['duration']=sanitize_text_field(@$yt_resp_array['items'][0]['contentDetails']['duration']);
-							$_thisLyte['description']=esc_attr(sanitize_text_field(@$yt_resp_array['items'][0]['snippet']['description']));
-							$_thisLyte['captions_data']=sanitize_text_field(@$yt_resp_array['items'][0]['contentDetails']['caption']);
-							$_thisLyte['captions_timestamp'] = strtotime("now");
-						}
+						$_thisLyte['title']=esc_attr(sanitize_text_field(@$yt_resp_array['items'][0]['snippet']['title']));
+						$_thisLyte['thumbUrl']=esc_url(@$yt_resp_array['items'][0]['snippet']['thumbnails']['high']['url']);
+						$_thisLyte['HQthumbUrl']=esc_url(@$yt_resp_array['items'][0]['snippet']['thumbnails']['maxres']['url']);
+						$_thisLyte['dateField']=sanitize_text_field(@$yt_resp_array['items'][0]['snippet']['publishedAt']);
+						$_thisLyte['duration']=sanitize_text_field(@$yt_resp_array['items'][0]['contentDetails']['duration']);
+						$_thisLyte['description']=esc_attr(sanitize_text_field(@$yt_resp_array['items'][0]['snippet']['description']));
+						$_thisLyte['captions_data']=sanitize_text_field(@$yt_resp_array['items'][0]['contentDetails']['caption']);
+						$_thisLyte['captions_timestamp'] = strtotime("now");
 					}
 				}
 					
@@ -525,7 +490,7 @@ function lyte_initer() {
 /* actual initialization */
 function lyte_init() {
 	global $lyteSettings;
-	$lyte_css = ".lyte-wrapper-audio div, .lyte-wrapper div {margin:0px !important; overflow:hidden;} .lyte,.lyMe{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background-color:#777;} .fourthree .lyMe, .fourthree .lyte {padding-bottom:75%;} .lidget{margin-bottom:5px;} .lidget .lyte, .widget .lyMe {padding-bottom:0!important;height:100%!important;} .lyte-wrapper-audio .lyte{height:38px!important;overflow:hidden;padding:0!important} .lyMe iframe, .lyte iframe,.lyte .pL{position:absolute !important;top:0;left:0;width:100%;height:100%!important;background:no-repeat scroll center #000;background-size:cover;cursor:pointer} .tC{background-color:rgba(0,0,0,0.8);left:0;position:absolute;top:0;width:100%} .tT{color:#CCC;font-family:sans-serif;font-size:12px;height:auto;text-align:left;padding:5px 10px} .tT:hover{color:#FFF;text-decoration:underline} .play{background:no-repeat scroll 0 0 transparent;width:88px;height:63px;position:absolute;left:43%;left:calc(50% - 44px);left:-webkit-calc(50% - 44px);top:38%;top:calc(50% - 31px);top:-webkit-calc(50% - 31px);} .widget .play {top:30%;top:calc(45% - 31px);top:-webkit-calc(45% - 31px);transform:scale(0.6);-webkit-transform:scale(0.6);-ms-transform:scale(0.6);} .lyte:hover .play{background-position:0 -65px;} .lyte-audio .pL{max-height:38px!important} .lyte-audio iframe{height:438px!important} .ctrl{background:repeat scroll 0 -215px transparent;width:100%;height:40px;bottom:0;left:0;position:absolute} .Lctrl{background:no-repeat scroll 0 -132px transparent;width:158px;height:40px;bottom:0;left:0;position:absolute} .Rctrl{background:no-repeat scroll -42px -174px transparent;width:117px;height:40px;bottom:0;right:0;position:absolute} .lyte-audio .play{display:none} .hidden{display:none}";
+	$lyte_css = ".lyte-wrapper-audio div, .lyte-wrapper div {margin:0px !important; overflow:hidden;} .lyte,.lyMe{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background-color:#777;} .fourthree .lyMe, .fourthree .lyte {padding-bottom:75%;} .lidget{margin-bottom:5px;} .lidget .lyte, .widget .lyMe {padding-bottom:0!important;height:100%!important;} .lyte-wrapper-audio .lyte{height:38px!important;overflow:hidden;padding:0!important} .lyMe iframe, .lyte iframe,.lyte .pL{position:absolute;top:0;left:0;width:100%;height:100%!important;background:no-repeat scroll center #000;background-size:cover;cursor:pointer} .tC{background-color:rgba(0,0,0,0.8);left:0;position:absolute;top:0;width:100%} .tT{color:#CCC;font-family:sans-serif;font-size:12px;height:auto;text-align:left;padding:5px 10px} .tT:hover{color:#FFF;text-decoration:underline} .play{background:no-repeat scroll 0 0 transparent;width:88px;height:63px;position:absolute;left:43%;left:calc(50% - 44px);left:-webkit-calc(50% - 44px);top:38%;top:calc(50% - 31px);top:-webkit-calc(50% - 31px);} .widget .play {top:30%;top:calc(45% - 31px);top:-webkit-calc(45% - 31px);transform:scale(0.6);-webkit-transform:scale(0.6);-ms-transform:scale(0.6);} .lyte:hover .play{background-position:0 -65px;} .lyte-audio .pL{max-height:38px!important} .lyte-audio iframe{height:438px!important} .ctrl{background:repeat scroll 0 -215px transparent;width:100%;height:40px;bottom:0;left:0;position:absolute} .Lctrl{background:no-repeat scroll 0 -132px transparent;width:158px;height:40px;bottom:0;left:0;position:absolute} .Rctrl{background:no-repeat scroll -42px -174px transparent;width:117px;height:40px;bottom:0;right:0;position:absolute} .lyte-audio .play{display:none} .hidden{display:none}";
 	
 	/** API: filter hook to change css */
 	$lyte_css = apply_filters( 'lyte_css', $lyte_css);
