@@ -569,7 +569,7 @@ function lyte_preparse($videoId) {
 }
 
 function lyte_add_action_link($links) {
-	$links[]='<a href="' . admin_url( 'options-general.php?page=lyte_settings_page' ) . '">' . _e('Settings') . '</a>';
+	$links[]='<a href="' . admin_url( 'options-general.php?page=lyte_settings_page' ) . '">' . __('Settings') . '</a>';
 	return $links;
 }
 

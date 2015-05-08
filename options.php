@@ -59,7 +59,7 @@ function lyte_admin_styles() {
 function lyte_admin_nag_apikey() {
 	echo "<div class=\"update-nag\">";
 	_e('For WP YouTube Lyte to function optimally, you should enter an YouTube API key ', 'wp-youtube-lyte');
-	echo "<a href=\"options-general.php?page=lyte_settings_page\">";
+	echo " <a href=\"options-general.php?page=lyte_settings_page\">";
 	_e('in the settings screen.','wp-youtube-lyte');
 	echo "</a>.</div>";
 }
